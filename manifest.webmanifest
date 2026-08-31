@@ -1,0 +1,17 @@
+{
+  "name": "Tabletop Scene Board",
+  "short_name": "Scene Board",
+  "description": "A simple cast-friendly tabletop scene board with campaigns and multiple scenes.",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#101612",
+  "theme_color": "#1f2d25",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
