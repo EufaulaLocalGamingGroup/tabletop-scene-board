@@ -1,43 +1,25 @@
-Tabletop Scene Board PWA
+Tabletop Scene Board PWA v3
 
-FILES
+WHAT'S NEW
+- Share Campaign uses your phone/tablet native share sheet when supported.
+- Export File remains as a fallback.
+- Import Campaign loads a campaign file someone sends you.
+- Multiple named scenes remain supported.
+- Each scene can have its own background.
+- Hidden characters remain completely invisible in the player scene.
+- Save/Load use browser storage on the current device.
+
+REPLACE YOUR GITHUB VERSION
+Upload these files to the ROOT of the same GitHub repository and replace the existing copies:
 - index.html
 - manifest.webmanifest
 - sw.js
 - icon.svg
+- README.txt
 
-HOW TO RUN
-A PWA needs to be served over HTTPS or localhost for installation/offline service-worker features.
+After GitHub Pages updates, refresh the site. If the installed PWA still shows the old version, close it fully and reopen it. Chrome may briefly cache the prior service worker.
 
-Easy options:
-1. GitHub Pages / Netlify / Cloudflare Pages: upload these files and open the HTTPS address.
-2. Laptop test: run a simple local web server in this folder, then open localhost.
-   Example with Python installed:
-       python -m http.server 8000
-   Then open:
-       http://localhost:8000
+SHARING
+Open a campaign and press Share Campaign. On supported Android/iPhone browsers, choose Messages, Discord, email, Drive, etc. The recipient opens the same Scene Board site and presses Import Campaign.
 
-CAMPAIGNS
-- Save stores the campaign in IndexedDB on the current browser/device.
-- Load shows campaigns saved on that device.
-- Export downloads a JSON campaign containing the background and character images.
-- Import loads that JSON on another device.
-- New creates a fresh campaign.
-
-INSTALL
-- Android/Chrome/Edge: browser menu -> Install app / Add to Home screen.
-- iPhone/iPad/Safari: Share -> Add to Home Screen.
-- Desktop Chrome/Edge: use the Install icon in the address bar/menu when available.
-
-CASTING
-Use your device's screen-mirroring/casting feature, or connect a laptop by HDMI. Press TV View to hide GM controls.
-
-
-MULTIPLE SCENES
-- Each campaign can now contain multiple named scenes.
-- Use New Scene to add locations such as Woods, Cabin, School, Lake, or Police Station.
-- Use the Scene dropdown to switch instantly.
-- Set Scene Background changes only the currently selected scene.
-- Rename and Delete manage scene entries.
-- Characters remain available while switching scenes.
-- Old exported/saved campaign files from version 1 are automatically migrated into a single Scene 1.
+If native file sharing is unavailable, use Export File and send the downloaded .scene-board.json manually.
