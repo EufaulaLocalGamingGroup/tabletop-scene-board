@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#1f2d25">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>Tabletop Scene Board v6.4.1</title>
-<meta name="scene-board-build" content="6.4.1">
+<title>Tabletop Scene Board v6.6</title>
+<meta name="scene-board-build" content="6.6">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png" type="image/png">
 <style>
@@ -126,12 +126,149 @@ button:hover{border-color:var(--accent)}button.primary{background:linear-gradien
 @keyframes sceneSlideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
 @keyframes sceneSlideDown{from{transform:translateY(-100%)}to{transform:translateY(0)}}
 
+
+/* V6.5 Developer Info */
+.developer-info-btn{
+  position:fixed;
+  right:12px;
+  top:12px;
+  z-index:5000;
+  width:34px;
+  height:34px;
+  border-radius:50%;
+  border:1px solid #7d6a3a;
+  background:#15110bd9;
+  color:#d6bb72;
+  font-weight:900;
+  font-size:17px;
+  display:grid;
+  place-items:center;
+  box-shadow:0 4px 16px #0008;
+  backdrop-filter:blur(8px);
+  opacity:.82;
+}
+.developer-info-btn:hover,.developer-info-btn:focus{opacity:1;box-shadow:0 0 0 2px #c2a35b33,0 4px 18px #000a}
+.player-display .developer-info-btn,.tv-mode .developer-info-btn{display:none!important}
+
+.developer-info-dialog{
+  width:min(560px,calc(100vw - 24px));
+  max-height:min(82vh,760px);
+  border:1px solid #76613a;
+  border-radius:16px;
+  padding:0;
+  color:#eee2c4;
+  background:#17130f;
+  box-shadow:0 24px 80px #000c;
+}
+.developer-info-dialog::backdrop{background:#050403b8;backdrop-filter:blur(3px)}
+.developer-info-card{padding:18px;overflow:auto;max-height:min(82vh,760px)}
+.developer-info-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;border-bottom:1px solid #4b3d28;padding-bottom:12px;margin-bottom:14px}
+.developer-info-head h2{margin:2px 0 0;font-size:22px;color:#f3e8ca}
+.developer-kicker{font-size:10px;letter-spacing:.18em;color:#b89852;font-weight:900}
+.dialog-x{
+  flex:0 0 auto;
+  width:34px;height:34px;border-radius:50%;
+  display:grid;place-items:center;
+  font-size:23px;line-height:1;
+  color:#eadbb8;background:#241c13;border:1px solid #5e4b2f;
+}
+.developer-version-block{display:flex;justify-content:space-between;align-items:center;gap:12px;background:#211a11;border:1px solid #5b492d;border-radius:12px;padding:12px 14px;margin-bottom:14px}
+.developer-version-label{color:#bfae87;font-size:12px}
+.developer-version{color:#d9bd73;font-size:22px;letter-spacing:.03em}
+.developer-section{border-top:1px solid #403522;padding-top:13px;margin-top:13px}
+.developer-section h3{margin:0 0 8px;color:#dfc98f;font-size:14px}
+.developer-build-notes{color:#c8bda6;font-size:13px;line-height:1.5}
+.developer-build-notes p{margin:5px 0}
+.developer-notes-title{display:flex;justify-content:space-between;gap:10px;align-items:baseline}
+.developer-notes-title span{font-size:10px;color:#8f826b}
+#developerCustomNotes{width:100%;box-sizing:border-box;resize:vertical;min-height:120px;background:#0f0d0a;color:#f0e7d5;border:1px solid #54452d;border-radius:10px;padding:10px;font:inherit;line-height:1.4}
+#developerCustomNotes:focus{outline:2px solid #c2a35b44;border-color:#9d8246}
+.developer-note-actions{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:8px}
+@media(max-width:700px){
+  .developer-info-btn{top:8px;right:8px;width:32px;height:32px}
+  .developer-info-dialog{width:calc(100vw - 16px);max-height:88vh}
+  .developer-info-card{padding:14px;max-height:88vh}
+}
+
+
+/* V6.6 corner menus + center-dot zoom */
+.developer-info-btn span{
+  display:grid;place-items:center;width:19px;height:19px;
+  border:1.7px solid currentColor;border-radius:50%;
+  font-family:Georgia,"Times New Roman",serif;font-size:13px;
+  font-weight:900;font-style:italic;line-height:1;
+}
+.developer-info-btn.awaiting-second-tap{
+  box-shadow:0 0 0 2px #c2a35b55,0 0 18px #c2a35b33;opacity:1;
+}
+.campaign-menu-btn{
+  position:fixed;left:12px;top:12px;z-index:5000;width:38px;height:38px;
+  border-radius:10px;border:1px solid #7d6a3a;background:#15110bd9;
+  color:#d6bb72;display:grid;place-items:center;box-shadow:0 4px 16px #0008;
+  backdrop-filter:blur(8px);opacity:.88;padding:6px;
+}
+.campaign-menu-btn:hover,.campaign-menu-btn:focus{
+  opacity:1;box-shadow:0 0 0 2px #c2a35b33,0 4px 18px #000a;
+}
+.campaign-menu-btn svg{width:25px;height:25px;display:block}
+.player-display .campaign-menu-btn,.tv-mode .campaign-menu-btn{display:none!important}
+.campaign-menu-dialog{
+  width:min(520px,calc(100vw - 24px));max-height:min(88vh,780px);
+  border:1px solid #76613a;border-radius:16px;padding:0;color:#eee2c4;
+  background:#17130f;box-shadow:0 24px 80px #000c;
+}
+.campaign-menu-dialog::backdrop{background:#050403b8;backdrop-filter:blur(3px)}
+.campaign-menu-card{padding:18px;overflow:auto;max-height:min(88vh,780px)}
+.campaign-menu-head{
+  display:flex;align-items:flex-start;justify-content:space-between;gap:12px;
+  border-bottom:1px solid #4b3d28;padding-bottom:12px;margin-bottom:14px;
+}
+.campaign-menu-head h2{margin:2px 0 0;font-size:22px;color:#f3e8ca}
+.campaign-name-editor{
+  display:grid;gap:6px;background:#211a11;border:1px solid #5b492d;
+  border-radius:12px;padding:12px;margin-bottom:14px;
+}
+.campaign-name-editor label{font-size:11px;color:#bfae87;font-weight:800}
+.campaign-name-editor input{
+  width:100%;box-sizing:border-box;background:#0f0d0a;color:#f0e7d5;
+  border:1px solid #54452d;border-radius:9px;padding:10px;font:inherit;font-weight:800;
+}
+.campaign-menu-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.campaign-menu-grid button{width:100%;box-sizing:border-box}
+.campaign-menu-grid .full{grid-column:1/-1}
+.campaign-menu-help{margin-top:12px;color:#95876e;font-size:11px;line-height:1.45}
+@media(max-width:700px){
+  .campaign-menu-btn{top:8px;left:8px;width:35px;height:35px}
+  .campaign-menu-dialog{width:calc(100vw - 16px);max-height:90vh}
+  .campaign-menu-card{padding:14px;max-height:90vh}
+}
+.stage.dot-zoom-out{
+  transform-origin:50% 50%;
+  animation:dotZoomOut var(--scene-half-duration,.4s) cubic-bezier(.55,.02,.8,.3) both;
+  overflow:hidden;
+}
+.stage.dot-zoom-in{
+  transform-origin:50% 50%;
+  animation:dotZoomIn var(--scene-half-duration,.4s) cubic-bezier(.2,.75,.3,1) both;
+  overflow:hidden;
+}
+@keyframes dotZoomOut{
+  0%{transform:scale(1);border-radius:12px;opacity:1}
+  85%{opacity:1}
+  100%{transform:scale(.012);border-radius:50%;opacity:.05}
+}
+@keyframes dotZoomIn{
+  0%{transform:scale(.012);border-radius:50%;opacity:.05}
+  15%{opacity:1}
+  100%{transform:scale(1);border-radius:12px;opacity:1}
+}
+
 </style>
 </head>
 <body>
 <div class="app" id="app">
 <div class="topbar filebar">
- <div class="grow"><div class="small">Campaign · Scene Board v6.4.1</div><div id="campaignTitle" class="campaign-name">Untitled Campaign</div></div>
+ <div class="grow"><div class="small">Campaign · Scene Board v6.6</div><div id="campaignTitle" class="campaign-name">Untitled Campaign</div></div>
  <span id="modePill" class="mode-pill">🎲 GM Mode</span><span id="displayLinkPill" class="link-pill">📺 Local Display: Off</span><button id="modeToggle" class="primary">Session Setup</button><button id="newCampaign" class="setup-only">New</button><button id="saveCampaign">Save</button><button id="loadCampaign" class="setup-only">Load</button><button id="shareCampaign" class="setup-only">Share Campaign</button><button id="exportCampaign" class="setup-only">Export File</button>
  <label class="filebtn setup-only"><button type="button">Import Campaign</button><input id="importFile" type="file" accept=".json,application/json"></label><button id="tvMode">TV View</button>
 </div>
@@ -166,7 +303,8 @@ button:hover{border-color:var(--accent)}button.primary{background:linear-gradien
 <div style="border-top:1px solid var(--line);padding-top:8px;display:grid;gap:8px">
  <div class="row" style="justify-content:space-between"><strong>Background Framing</strong><button id="bgLock">Lock Background</button></div>
  <label>Fit mode<select id="bgFit" class="compact-select"><option value="cover">Fill Screen</option><option value="contain">Fit Whole Image</option></select></label>
- <div class="frame-actions"><button id="editBackgroundOnStage" type="button" class="primary">✋ Move / Zoom Background</button><button id="bgCenter" type="button">Center</button></div>
+ <div class="row"><button id="clearBackground" type="button" class="danger">Clear Background</button></div>
+<div class="frame-actions"><button id="editBackgroundOnStage" type="button" class="primary">✋ Move / Zoom Background</button><button id="bgCenter" type="button">Center</button></div><div class="row"><button id="resetBackgroundOriginal" type="button">↺ Reset Background to Original View</button></div>
 <div class="small">Drag directly on the scene. Pinch on a phone/tablet or use the mouse wheel/trackpad to zoom. Lock when finished.</div>
 <details class="precision-details"><summary>Precision sliders</summary><div id="bgFrameControls" class="stack">
   <div class="bg-frame-grid"><span class="small">Zoom</span><input id="bgZoom" type="range" min="50" max="300" step="1" value="100"><span id="bgZoomVal" class="small bg-frame-readout">100%</span></div>
@@ -183,12 +321,13 @@ button:hover{border-color:var(--accent)}button.primary{background:linear-gradien
 <option value="slide-right">Slide In From Right</option>
 <option value="slide-up">Slide In From Bottom</option>
 <option value="slide-down">Slide In From Top</option>
+<option value="dot-zoom">Center Dot Zoom</option>
 </select></label><label class="fade-control">Transition duration <strong id="fadeDurationVal">0.8 sec</strong><input id="fadeDuration" type="range" min="0" max="5" step="0.1" value="0.8"><span class="fade-scale"><span>Instant</span><span>5 sec</span></span></label><div class="scene-note-card"><label><strong>GM Scene Notes</strong><textarea id="sceneNotes" class="notes" placeholder="Clues, reminders, secrets, scene details..."></textarea></label></div></section>
 
 <section class="tool-card"><strong>Foreground Tools</strong><div class="small">Position still images, GIFs, or looping videos independently from the background.</div>
 <div class="row" style="justify-content:space-between"><strong>Foreground Framing</strong><button id="fgLock">Lock Foreground</button></div>
 <label>Fit mode<select id="fgFit" class="compact-select"><option value="cover">Fill Screen</option><option value="contain">Fit Whole Image</option></select></label>
-<div class="frame-actions"><button id="editForegroundOnStage" type="button" class="primary">✋ Move / Zoom Foreground</button><button id="fgCenter" type="button">Center</button></div>
+<div class="frame-actions"><button id="editForegroundOnStage" type="button" class="primary">✋ Move / Zoom Foreground</button><button id="fgCenter" type="button">Center</button></div><div class="row"><button id="resetForegroundOriginal" type="button">↺ Reset Foreground to Original View</button></div>
 <div class="small">Drag directly on the scene. Pinch on a phone/tablet or use the mouse wheel/trackpad to zoom. Lock when finished.</div>
 <details class="precision-details"><summary>Precision sliders & opacity</summary><div id="fgFrameControls" class="stack">
  <div class="bg-frame-grid"><span class="small">Zoom</span><input id="fgZoom" type="range" min="50" max="300" step="1" value="100"><span id="fgZoomVal" class="small bg-frame-readout">100%</span></div>
@@ -277,7 +416,7 @@ const character=()=>campaign.characters.find(c=>c.id===selectedId)||null;
 const defaultPlacement=(i=0)=>({x:45+(i%5)*3,y:86-(i%3)*5,scale:100,z:10+i,hidden:false,locked:false});
 function placement(c){const s=scene();if(!s.placements)s.placements={};if(!s.placements[c.id])s.placements[c.id]=defaultPlacement(campaign.characters.indexOf(c));return s.placements[c.id]}
 function normalizeMedia(b){if(!b)return null;if(typeof b==="string")return{type:"image",mime:"image/*",data:b,name:"Migrated background"};return b}
-function migrate(o){if(!o||!Array.isArray(o.characters))throw Error("Invalid");if(!Array.isArray(o.scenes)||!o.scenes.length){const s=freshScene("Scene 1");s.background=normalizeMedia(o.background);o.scenes=[s];o.currentSceneId=s.id}o.scenes=o.scenes.map((s,i)=>({id:s.id||id(),name:s.name||`Scene ${i+1}`,background:normalizeMedia(s.background),backgroundView:s.backgroundView||{fit:"cover",zoom:100,x:50,y:50,locked:false},foreground:normalizeMedia(s.foreground),foregroundView:s.foregroundView||{fit:"cover",zoom:100,x:50,y:50,opacity:100,locked:false},notes:s.notes||"",placements:s.placements||{}}));o.characters=o.characters.map((c,i)=>{c.id=c.id||id();c.health=c.health||{enabled:false,max:4,current:4,visible:false};if(c.health.max<1)c.health.max=4;c.health.current=Math.max(0,Math.min(c.health.max,c.health.current??c.health.max));c.group=c.group||"Other";c.conditions=Array.isArray(c.conditions)?c.conditions:[];c.conditionsVisible=!!c.conditionsVisible;c.notes=c.notes||"";return c});if((o.version||0)<4){o.scenes.forEach(s=>o.characters.forEach((c,i)=>{if(!s.placements[c.id])s.placements[c.id]={x:c.x??45+(i%5)*3,y:c.y??86-(i%3)*5,scale:c.scale??100,z:c.z??10+i,hidden:!!c.hidden,locked:false}}))}o.backgroundLibrary=Array.isArray(o.backgroundLibrary)?o.backgroundLibrary:[];o.transition=["none","fade","slide-left","slide-right","slide-up","slide-down"].includes(o.transition)?o.transition:"fade";o.transitionDuration=Number.isFinite(Number(o.transitionDuration))?Math.max(0,Math.min(5,Number(o.transitionDuration))):(o.transition==="none"?0:0.8);o.healthDisplayStyle=["numbers","bars","circles","hearts"].includes(o.healthDisplayStyle)?o.healthDisplayStyle:"bars";o.turnTracker=o.turnTracker||{enabled:false,visible:false,order:[],currentIndex:0};o.turnTracker.order=Array.isArray(o.turnTracker.order)?o.turnTracker.order.filter(cid=>o.characters.some(c=>c.id===cid)):[];o.characters.forEach(c=>{if(!o.turnTracker.order.includes(c.id))o.turnTracker.order.push(c.id)});o.turnTracker.currentIndex=Math.max(0,Math.min(o.turnTracker.currentIndex||0,Math.max(0,o.turnTracker.order.length-1)));o.currentSceneId=o.currentSceneId||o.scenes[0].id;o.version=5;o.id=o.id||id();return o}
+function migrate(o){if(!o||!Array.isArray(o.characters))throw Error("Invalid");if(!Array.isArray(o.scenes)||!o.scenes.length){const s=freshScene("Scene 1");s.background=normalizeMedia(o.background);o.scenes=[s];o.currentSceneId=s.id}o.scenes=o.scenes.map((s,i)=>({id:s.id||id(),name:s.name||`Scene ${i+1}`,background:normalizeMedia(s.background),backgroundView:s.backgroundView||{fit:"cover",zoom:100,x:50,y:50,locked:false},foreground:normalizeMedia(s.foreground),foregroundView:s.foregroundView||{fit:"cover",zoom:100,x:50,y:50,opacity:100,locked:false},notes:s.notes||"",placements:s.placements||{}}));o.characters=o.characters.map((c,i)=>{c.id=c.id||id();c.health=c.health||{enabled:false,max:4,current:4,visible:false};if(c.health.max<1)c.health.max=4;c.health.current=Math.max(0,Math.min(c.health.max,c.health.current??c.health.max));c.group=c.group||"Other";c.conditions=Array.isArray(c.conditions)?c.conditions:[];c.conditionsVisible=!!c.conditionsVisible;c.notes=c.notes||"";return c});if((o.version||0)<4){o.scenes.forEach(s=>o.characters.forEach((c,i)=>{if(!s.placements[c.id])s.placements[c.id]={x:c.x??45+(i%5)*3,y:c.y??86-(i%3)*5,scale:c.scale??100,z:c.z??10+i,hidden:!!c.hidden,locked:false}}))}o.backgroundLibrary=Array.isArray(o.backgroundLibrary)?o.backgroundLibrary:[];o.transition=["none","fade","slide-left","slide-right","slide-up","slide-down","dot-zoom"].includes(o.transition)?o.transition:"fade";o.transitionDuration=Number.isFinite(Number(o.transitionDuration))?Math.max(0,Math.min(5,Number(o.transitionDuration))):(o.transition==="none"?0:0.8);o.healthDisplayStyle=["numbers","bars","circles","hearts"].includes(o.healthDisplayStyle)?o.healthDisplayStyle:"bars";o.turnTracker=o.turnTracker||{enabled:false,visible:false,order:[],currentIndex:0};o.turnTracker.order=Array.isArray(o.turnTracker.order)?o.turnTracker.order.filter(cid=>o.characters.some(c=>c.id===cid)):[];o.characters.forEach(c=>{if(!o.turnTracker.order.includes(c.id))o.turnTracker.order.push(c.id)});o.turnTracker.currentIndex=Math.max(0,Math.min(o.turnTracker.currentIndex||0,Math.max(0,o.turnTracker.order.length-1)));o.currentSceneId=o.currentSceneId||o.scenes[0].id;o.version=5;o.id=o.id||id();return o}
 const dataURL=f=>new Promise((res,rej)=>{const r=new FileReader;r.onload=()=>res(r.result);r.onerror=rej;r.readAsDataURL(f)});
 const clean=n=>(n||"Character").replace(/\.[^.]+$/,"").replace(/[_-]+/g," ").trim()||"Character";
 function backgroundView(){const s=scene();if(!s.backgroundView)s.backgroundView={fit:"cover",zoom:100,x:50,y:50,locked:false};return s.backgroundView}
@@ -326,6 +465,24 @@ if(type==="fade"&&sec>0){
     fadeOverlay.classList.remove("on");
     setTimeout(()=>{fadeOverlay.style.transitionDuration=""},Math.max(50,sec*500));
   }));
+  return;
+}
+
+if(type==="dot-zoom"&&sec>0){
+  const half=Math.max(.05,sec/2);
+  stage.style.setProperty("--scene-half-duration",`${half}s`);
+  stage.classList.remove("dot-zoom-in","dot-zoom-out","transitioning");
+  void stage.offsetWidth;
+  stage.classList.add("transitioning","dot-zoom-out");
+  await new Promise(r=>setTimeout(r,Math.max(50,half*1000)));
+  stage.classList.remove("dot-zoom-out");
+  campaign.currentSceneId=nextId;selectedId=null;rebuild();
+  void stage.offsetWidth;
+  stage.classList.add("dot-zoom-in");
+  setTimeout(()=>{
+    stage.classList.remove("dot-zoom-in","transitioning");
+    stage.style.removeProperty("--scene-half-duration");
+  },Math.max(60,half*1000+60));
   return;
 }
 
@@ -553,6 +710,13 @@ renderV5Tools=function(){
   if(mediaEditMode==="foreground"&&foregroundView().locked)setMediaEditMode(null);
 }
 
+
+const _v66Rebuild=rebuild;
+rebuild=function(){
+  _v66Rebuild();
+  syncCampaignMenu?.();
+}
+
 // ---- V6.1 Local GM ↔ Player Display (same LAN, manual WebRTC pairing) ----
 let localPeer=null, localChannel=null, localRole=null, playerDisplayArmed=false;
 let rxChunks=new Map(), txSeq=0, localSyncTimer=null;
@@ -741,6 +905,196 @@ function wireMediaClearButtons(){
 }
 wireMediaClearButtons();
 
-if("serviceWorker"in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js?v=6.4.1").catch(()=>{}));rebuild();
+
+// ---- V6.4.2 reset media to original view ----
+function resetBackgroundToOriginalView(){
+  const s=scene(); if(!s)return;
+  s.backgroundView={fit:"contain",zoom:100,x:50,y:50,locked:false};
+  applyBackgroundView();
+  renderV5Tools?.();
+  sendPlayerState?.();
+}
+function resetForegroundToOriginalView(){
+  const s=scene(); if(!s)return;
+  s.foregroundView={fit:"contain",zoom:100,x:50,y:50,opacity:100,locked:false};
+  applyForegroundView();
+  renderV5Tools?.();
+  sendPlayerState?.();
+}
+const _wireMediaClearButtonsV642 = wireMediaClearButtons;
+wireMediaClearButtons=function(){
+  _wireMediaClearButtonsV642?.();
+  const rb=$("resetBackgroundOriginal");
+  const rf=$("resetForegroundOriginal");
+  if(rb) rb.onclick=(e)=>{e.preventDefault();e.stopPropagation();resetBackgroundToOriginalView()};
+  if(rf) rf.onclick=(e)=>{e.preventDefault();e.stopPropagation();resetForegroundToOriginalView()};
+}
+wireMediaClearButtons();
+
+
+
+// ---- V6.6 Campaign Menu ----
+const campaignMenuBtn=$("campaignMenuBtn");
+const campaignMenuDialog=$("campaignMenuDialog");
+const campaignMenuClose=$("campaignMenuClose");
+const campaignMenuName=$("campaignMenuName");
+function syncCampaignMenu(){
+  if(campaignMenuName)campaignMenuName.value=campaign?.name||"Untitled Campaign";
+}
+campaignMenuBtn?.addEventListener("click",()=>{
+  syncCampaignMenu();
+  campaignMenuDialog?.showModal();
+});
+campaignMenuClose?.addEventListener("click",()=>campaignMenuDialog?.close());
+campaignMenuDialog?.addEventListener("click",e=>{
+  if(e.target===campaignMenuDialog)campaignMenuDialog.close();
+});
+campaignMenuName?.addEventListener("input",()=>{
+  campaign.name=campaignMenuName.value.trimStart()||"Untitled Campaign";
+  $("campaignTitle").textContent=campaign.name;
+});
+campaignMenuName?.addEventListener("change",()=>{
+  campaign.name=campaignMenuName.value.trim()||"Untitled Campaign";
+  campaignMenuName.value=campaign.name;
+  $("campaignTitle").textContent=campaign.name;
+});
+$("campaignMenuSave")?.addEventListener("click",()=>$("saveCampaign")?.click());
+$("campaignMenuLoad")?.addEventListener("click",()=>{campaignMenuDialog?.close();$("loadCampaign")?.click()});
+$("campaignMenuShare")?.addEventListener("click",()=>$("shareCampaign")?.click());
+$("campaignMenuExport")?.addEventListener("click",()=>$("exportCampaign")?.click());
+$("campaignMenuImport")?.addEventListener("click",()=>{campaignMenuDialog?.close();$("importFile")?.click()});
+$("campaignMenuNew")?.addEventListener("click",()=>{campaignMenuDialog?.close();$("newCampaign")?.click()});
+$("campaignMenuSetup")?.addEventListener("click",()=>{campaignMenuDialog?.close();$("modeToggle")?.click()});
+
+// ---- V6.5 Developer Info panel ----
+const DEVELOPER_NOTES_KEY="sceneBoardDeveloperNotes";
+const developerInfoBtn=$("developerInfoBtn");
+const developerInfoDialog=$("developerInfoDialog");
+const developerInfoClose=$("developerInfoClose");
+const developerCustomNotes=$("developerCustomNotes");
+const developerNoteSaved=$("developerNoteSaved");
+
+if(developerCustomNotes){
+  developerCustomNotes.value=localStorage.getItem(DEVELOPER_NOTES_KEY)||"";
+  let devNoteTimer=null;
+  developerCustomNotes.addEventListener("input",()=>{
+    localStorage.setItem(DEVELOPER_NOTES_KEY,developerCustomNotes.value);
+    if(developerNoteSaved){
+      developerNoteSaved.textContent="Saved.";
+      clearTimeout(devNoteTimer);
+      devNoteTimer=setTimeout(()=>developerNoteSaved.textContent="Changes save automatically.",1200);
+    }
+  });
+}
+let developerTapTimer=null;
+let developerLastTap=0;
+developerInfoBtn?.addEventListener("pointerup",e=>{
+  e.preventDefault();
+  const now=Date.now();
+  if(now-developerLastTap<=420){
+    developerLastTap=0;
+    clearTimeout(developerTapTimer);
+    developerInfoBtn.classList.remove("awaiting-second-tap");
+    developerInfoDialog?.showModal();
+    return;
+  }
+  developerLastTap=now;
+  developerInfoBtn.classList.add("awaiting-second-tap");
+  clearTimeout(developerTapTimer);
+  developerTapTimer=setTimeout(()=>{
+    developerLastTap=0;
+    developerInfoBtn.classList.remove("awaiting-second-tap");
+  },430);
+});
+developerInfoClose?.addEventListener("click",()=>developerInfoDialog?.close());
+developerInfoDialog?.addEventListener("click",e=>{
+  if(e.target===developerInfoDialog)developerInfoDialog.close();
+});
+$("clearDeveloperNotes")?.addEventListener("click",()=>{
+  if(!developerCustomNotes)return;
+  developerCustomNotes.value="";
+  localStorage.removeItem(DEVELOPER_NOTES_KEY);
+  if(developerNoteSaved)developerNoteSaved.textContent="Notes cleared.";
+});
+
+if("serviceWorker"in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js?v=6.6").catch(()=>{}));rebuild();
 })();
-</script></body></html>
+</script>
+
+<button id="campaignMenuBtn" class="campaign-menu-btn" type="button" title="Campaign Menu" aria-label="Campaign Menu">
+  <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M32 5 54 18 58 43 40 59 15 53 6 30 18 10Z"/>
+    <path d="M18 10 32 22 54 18M32 22 58 43M32 22 15 53M32 22 6 30M6 30 28 34 58 43M28 34 40 59"/>
+    <path d="M28 34 32 22"/>
+    <text x="32" y="31" text-anchor="middle" dominant-baseline="middle" fill="currentColor" stroke="none" font-size="13" font-family="Georgia, serif" font-weight="700">20</text>
+  </svg>
+</button>
+
+<dialog id="campaignMenuDialog" class="campaign-menu-dialog">
+  <div class="campaign-menu-card">
+    <div class="campaign-menu-head">
+      <div>
+        <div class="developer-kicker">SCENE BOARD</div>
+        <h2>Campaign Menu</h2>
+      </div>
+      <button id="campaignMenuClose" class="dialog-x" type="button" aria-label="Close">×</button>
+    </div>
+    <div class="campaign-name-editor">
+      <label for="campaignMenuName">Campaign Name</label>
+      <input id="campaignMenuName" type="text" maxlength="80" placeholder="Untitled Campaign">
+    </div>
+    <div class="campaign-menu-grid">
+      <button id="campaignMenuSave" class="primary" type="button">Save Campaign</button>
+      <button id="campaignMenuLoad" type="button">Load Campaign</button>
+      <button id="campaignMenuShare" type="button">Share Campaign</button>
+      <button id="campaignMenuExport" type="button">Export File</button>
+      <button id="campaignMenuImport" type="button">Import Campaign</button>
+      <button id="campaignMenuNew" class="danger" type="button">New Campaign</button>
+      <button id="campaignMenuSetup" class="full" type="button">Session Setup / GM Mode</button>
+    </div>
+    <div class="campaign-menu-help">
+      Campaign name changes apply immediately. Save stores the campaign in this browser. Export creates a portable campaign file.
+    </div>
+  </div>
+</dialog>
+
+<button id="developerInfoBtn" class="developer-info-btn" type="button" title="Double-tap for Developer Info" aria-label="Developer Info"><span aria-hidden="true">i</span></button>
+
+<dialog id="developerInfoDialog" class="developer-info-dialog">
+  <div class="developer-info-card">
+    <div class="developer-info-head">
+      <div>
+        <div class="developer-kicker">SCENE BOARD</div>
+        <h2>Developer Info</h2>
+      </div>
+      <button id="developerInfoClose" class="dialog-x" type="button" aria-label="Close">×</button>
+    </div>
+
+    <div class="developer-version-block">
+      <span class="developer-version-label">Current Version</span>
+      <strong class="developer-version">v6.6</strong>
+    </div>
+
+    <div class="developer-section">
+      <h3>Build Notes</h3>
+      <div class="developer-build-notes">
+        <p><strong>V6.6</strong> adds the Campaign Menu, double-tap Developer Info button, and Center Dot Zoom transition.</p>
+        <p>This build also includes all V6.x features and fixes through V6.4.2.</p>
+      </div>
+    </div>
+
+    <div class="developer-section">
+      <div class="developer-notes-title">
+        <h3>My Developer Notes</h3>
+        <span>Saved on this device</span>
+      </div>
+      <textarea id="developerCustomNotes" rows="7" placeholder="Add reminders, planned features, testing notes, GitHub update notes, or anything else you want to keep here..."></textarea>
+      <div class="developer-note-actions">
+        <span id="developerNoteSaved" class="small">Changes save automatically.</span>
+        <button id="clearDeveloperNotes" type="button" class="danger">Clear Notes</button>
+      </div>
+    </div>
+  </div>
+</dialog>
+
+</body></html>

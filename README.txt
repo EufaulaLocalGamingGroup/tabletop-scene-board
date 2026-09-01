@@ -1,30 +1,22 @@
-TABLETOP SCENE BOARD V6.4.1 — HOTFIX
+TABLETOP SCENE BOARD V6.6 — CAMPAIGN MENU + CENTER DOT ZOOM
 
-FIXED
-- Bottom navigation buttons work again.
-- Background upload works again.
-- Foreground upload works again.
-- GM Notes / Health / Display controls initialize normally.
-- The V6.4 transition options remain:
-  Instant
-  Fade to Black
-  Slide In From Left
-  Slide In From Right
-  Slide In From Bottom
-  Slide In From Top
-- 0–5 second transition duration remains.
+Developer Info
+- Icon is now an “i” inside a circle.
+- Double-tap / double-click required to open.
+- First tap briefly highlights the icon.
+- Hidden in TV View and Player Display.
 
-CAUSE
-A leftover fragment from the older Fade transition function remained after the V6.4 transition upgrade. That created a JavaScript syntax error, which prevented the rest of the app's controls from initializing.
+Center Dot Zoom transition
+- Current scene shrinks into a tiny point in the center.
+- Next scene expands out from the center.
+- Uses the existing 0–5 second transition duration.
 
-This package is cumulative and includes all prior V6.x features and fixes.
+Campaign Menu
+- New line-art D20 icon in the upper-left.
+- Separate popup with X close button.
+- Rename campaign.
+- Save / Load / Share / Export / Import / New Campaign.
+- Session Setup / GM Mode shortcut.
+- Hidden in TV View and Player Display.
 
-GITHUB UPDATE
-Replace:
-index.html
-sw.js
-manifest.webmanifest
-icon-192.png
-icon-512.png
-
-Confirm the header says “Campaign · Scene Board v6.4.1”.
+This package is cumulative through V6.6.
