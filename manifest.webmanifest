@@ -1,7 +1,7 @@
 {
   "name": "Tabletop Scene Board",
   "short_name": "Scene Board",
-  "description": "A lightweight tabletop scene display with animated backgrounds, scene-specific character placement, and optional health tracking.",
+  "description": "Tabletop scene display with animated backgrounds, health, conditions, GM notes, turn tracking, overlays, and reusable scene assets.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
