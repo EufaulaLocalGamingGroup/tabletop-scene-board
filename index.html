@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#1f2d25">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>Tabletop Scene Board v6.4</title>
-<meta name="scene-board-build" content="6.4">
+<title>Tabletop Scene Board v6.4.1</title>
+<meta name="scene-board-build" content="6.4.1">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png" type="image/png">
 <style>
@@ -131,7 +131,7 @@ button:hover{border-color:var(--accent)}button.primary{background:linear-gradien
 <body>
 <div class="app" id="app">
 <div class="topbar filebar">
- <div class="grow"><div class="small">Campaign · Scene Board v6.4</div><div id="campaignTitle" class="campaign-name">Untitled Campaign</div></div>
+ <div class="grow"><div class="small">Campaign · Scene Board v6.4.1</div><div id="campaignTitle" class="campaign-name">Untitled Campaign</div></div>
  <span id="modePill" class="mode-pill">🎲 GM Mode</span><span id="displayLinkPill" class="link-pill">📺 Local Display: Off</span><button id="modeToggle" class="primary">Session Setup</button><button id="newCampaign" class="setup-only">New</button><button id="saveCampaign">Save</button><button id="loadCampaign" class="setup-only">Load</button><button id="shareCampaign" class="setup-only">Share Campaign</button><button id="exportCampaign" class="setup-only">Export File</button>
  <label class="filebtn setup-only"><button type="button">Import Campaign</button><input id="importFile" type="file" accept=".json,application/json"></label><button id="tvMode">TV View</button>
 </div>
@@ -348,13 +348,7 @@ if(type.startsWith("slide-")&&sec>0){
   },Math.max(50,sec*1000+50));
 }
 }
-campaign.currentSceneId=nextId;selectedId=null;rebuild();
-if(sec>0){
-  requestAnimationFrame(()=>requestAnimationFrame(()=>{
-    fadeOverlay.classList.remove("on");
-    setTimeout(()=>{fadeOverlay.style.transitionDuration=""},Math.max(50,sec*500));
-  }));
-}}
+
 $("foregroundFile").addEventListener("change",async e=>{const f=e.target.files?.[0];if(!f)return;if(f.size>20*1024*1024&&!confirm("This foreground is over 20 MB and may make campaign files slow to save/share. Use it anyway?")){e.target.value="";return}scene().foreground={type:f.type.startsWith("video/")?"video":"image",mime:f.type,data:await dataURL(f),name:f.name};scene().foregroundView={fit:"cover",zoom:100,x:50,y:50,opacity:100,locked:false};renderForeground();renderV5Tools();status.textContent=f.type.startsWith("video/")?"Looping video foreground set":"Foreground image/GIF set";e.target.value=""});
 $("clearForeground").onclick=()=>{scene().foreground=null;scene().foregroundView={fit:"cover",zoom:100,x:50,y:50,opacity:100,locked:false};renderForeground();renderV5Tools();status.textContent="Foreground cleared"};
 function renderV5Tools(){const s=scene(),bv=backgroundView();$("sceneNotes").value=s.notes||"";$("transitionSelect").value=campaign.transition||"fade";$("fadeDuration").value=campaign.transition==="none"?0:(campaign.transitionDuration??0.8);$("fadeDurationVal").textContent=(campaign.transition==="none"||Number(campaign.transitionDuration)===0)?"Instant":`${Number(campaign.transitionDuration??0.8).toFixed(1)} sec`;$("bgFit").value=bv.fit||"cover";$("bgZoom").value=bv.zoom??100;$("bgX").value=bv.x??50;$("bgY").value=bv.y??50;$("bgZoomVal").textContent=`${bv.zoom??100}%`;$("bgXVal").textContent=`${bv.x??50}%`;$("bgYVal").textContent=`${bv.y??50}%`;$("bgLock").textContent=bv.locked?"Unlock Background":"Lock Background";["bgFit","bgZoom","bgX","bgY","bgReset"].forEach(k=>$(k).disabled=!!bv.locked);$("bgFrameControls").classList.toggle("bg-frame-locked",!!bv.locked);const fv=foregroundView();$("fgFit").value=fv.fit||"cover";$("fgZoom").value=fv.zoom??100;$("fgX").value=fv.x??50;$("fgY").value=fv.y??50;$("fgOpacity").value=fv.opacity??100;$("fgZoomVal").textContent=`${fv.zoom??100}%`;$("fgXVal").textContent=`${fv.x??50}%`;$("fgYVal").textContent=`${fv.y??50}%`;$("fgOpacityVal").textContent=`${fv.opacity??100}%`;$("fgLock").textContent=fv.locked?"Unlock Foreground":"Lock Foreground";["fgFit","fgZoom","fgX","fgY","fgOpacity","fgReset"].forEach(k=>$(k).disabled=!!fv.locked);const lib=$("bgLibrary"),keep=lib.value;lib.innerHTML='<option value="">Background Library</option>';campaign.backgroundLibrary.forEach(x=>{const o=document.createElement("option");o.value=x.id;o.textContent=x.name;lib.append(o)});if([...lib.options].some(o=>o.value===keep))lib.value=keep;const c=character();$("characterToolEmpty").style.display=c?"none":"block";$("characterToolBody").style.display=c?"grid":"none";if(c){$("characterGroup").value=c.group||"Other";$("conditionsVisible").checked=!!c.conditionsVisible;$("characterNotes").value=c.notes||"";const box=$("conditionList");box.innerHTML="";(c.conditions||[]).forEach((x,i)=>{const b=document.createElement("button");b.type="button";b.textContent=x+" ×";b.onclick=()=>{c.conditions.splice(i,1);apply(c);renderV5Tools()};box.append(b)})}const t=campaign.turnTracker;$("turnEnabled").checked=!!t.enabled;$("turnVisible").checked=!!t.visible;const tl=$("turnList");tl.innerHTML="";t.order.forEach((cid,i)=>{const c2=campaign.characters.find(c=>c.id===cid);if(!c2)return;const r=document.createElement("div");r.className="turn-row"+(i===t.currentIndex&&t.enabled?" current":"");const n=document.createElement("button");n.type="button";n.textContent=c2.name;n.onclick=()=>{t.currentIndex=i;renderV5Tools();renderTurnBadge()};const up=document.createElement("button");up.textContent="↑";up.disabled=i===0;up.onclick=()=>{[t.order[i-1],t.order[i]]=[t.order[i],t.order[i-1]];if(t.currentIndex===i)t.currentIndex=i-1;else if(t.currentIndex===i-1)t.currentIndex=i;renderV5Tools();renderTurnBadge()};const dn=document.createElement("button");dn.textContent="↓";dn.disabled=i===t.order.length-1;dn.onclick=()=>{[t.order[i+1],t.order[i]]=[t.order[i],t.order[i+1]];if(t.currentIndex===i)t.currentIndex=i+1;else if(t.currentIndex===i+1)t.currentIndex=i;renderV5Tools();renderTurnBadge()};r.append(n,up,dn);tl.append(r)})}
@@ -747,6 +741,6 @@ function wireMediaClearButtons(){
 }
 wireMediaClearButtons();
 
-if("serviceWorker"in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js?v=6.4").catch(()=>{}));rebuild();
+if("serviceWorker"in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js?v=6.4.1").catch(()=>{}));rebuild();
 })();
 </script></body></html>

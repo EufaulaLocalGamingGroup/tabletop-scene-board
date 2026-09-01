@@ -1,29 +1,23 @@
-TABLETOP SCENE BOARD V6.4 — POWERPOINT-STYLE SCENE TRANSITIONS
+TABLETOP SCENE BOARD V6.4.1 — HOTFIX
 
-NEW TRANSITION OPTIONS
-- Instant
-- Fade to Black
-- Slide In From Left
-- Slide In From Right
-- Slide In From Bottom
-- Slide In From Top
+FIXED
+- Bottom navigation buttons work again.
+- Background upload works again.
+- Foreground upload works again.
+- GM Notes / Health / Display controls initialize normally.
+- The V6.4 transition options remain:
+  Instant
+  Fade to Black
+  Slide In From Left
+  Slide In From Right
+  Slide In From Bottom
+  Slide In From Top
+- 0–5 second transition duration remains.
 
-TRANSITION DURATION
-- One shared duration slider controls all animated transitions.
-- Range: 0.0 to 5.0 seconds.
-- 0.0 seconds = Instant.
-- Selecting an animated transition while duration is 0 restores a sensible 0.8 second default.
-- Transition type and duration are stored with the campaign and synchronized to the local Player Display.
+CAUSE
+A leftover fragment from the older Fade transition function remained after the V6.4 transition upgrade. That created a JavaScript syntax error, which prevented the rest of the app's controls from initializing.
 
-CUMULATIVE
-Includes all previous V6.x improvements:
-- V6 UI overhaul
-- Local split GM / Player Display
-- Health Manager and GM Notes fixes
-- Player/TV health styles including 3/4 numbers
-- Background/foreground clear fixes
-- Direct drag/pinch/wheel scene framing
-- Adjustable transition timing
+This package is cumulative and includes all prior V6.x features and fixes.
 
 GITHUB UPDATE
 Replace:
@@ -33,4 +27,4 @@ manifest.webmanifest
 icon-192.png
 icon-512.png
 
-Confirm the header says “Campaign · Scene Board v6.4”.
+Confirm the header says “Campaign · Scene Board v6.4.1”.
