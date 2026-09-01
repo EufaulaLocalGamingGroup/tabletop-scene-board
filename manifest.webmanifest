@@ -1,7 +1,7 @@
 {
   "name": "Tabletop Scene Board",
   "short_name": "Scene Board",
-  "description": "Tabletop scene display with animated backgrounds, health, conditions, GM notes, turn tracking, overlays, and reusable scene assets.",
+  "description": "Tabletop scene display with independently adjustable animated backgrounds and foreground overlays.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

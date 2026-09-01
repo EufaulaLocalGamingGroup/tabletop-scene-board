@@ -1,16 +1,12 @@
-Tabletop Scene Board v5
+Tabletop Scene Board v5.2
 
-NEW IN V5
-- Character conditions/status markers with optional player visibility.
-- Character groups: Player, NPC, Enemy, Other.
-- Reusable background library inside each campaign.
-- GM-only scene notes and character notes.
-- Optional rules-light turn tracker with drag-free up/down ordering and optional TV current-turn badge.
-- Foreground image/GIF overlays for fog, branches, door frames, darkness, etc.
-- Optional Instant or Fade-to-Black scene transitions.
-- Keeps V4 animated backgrounds, D4/D6/D8/Custom health, scene-specific placements, duplicate scenes, locking, saving/import/export/share, and the v4.1 network-first update fix.
-- Imports older Scene Board campaign files and upgrades them to V5.
+NEW
+- Foregrounds now support images, animated GIFs, MP4, and WebM.
+- Foreground videos autoplay muted and loop.
+- Independent foreground Fit/Fill, Zoom, Left/Right, Up/Down, Opacity, Lock, and Reset controls.
+- Foreground settings are saved per scene and copied when duplicating scenes.
+- 20 MB warning for large foreground video files.
+- Background and foreground controls are completely independent.
 
-UPDATE GITHUB
-Replace index.html, sw.js, manifest.webmanifest, icon-192.png and icon-512.png in the repository root.
-After deployment, the app header should say: Campaign · Scene Board v5
+Upload/replace index.html, sw.js, manifest.webmanifest, icon-192.png, and icon-512.png in your GitHub repo.
+Confirm the page says “Campaign · Scene Board v5.2”.
