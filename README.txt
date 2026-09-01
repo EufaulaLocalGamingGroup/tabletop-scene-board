@@ -1,22 +1,25 @@
-TABLETOP SCENE BOARD V6.6 — CAMPAIGN MENU + CENTER DOT ZOOM
+TABLETOP SCENE BOARD V6.6.2 — D20 MENU ICON
 
-Developer Info
-- Icon is now an “i” inside a circle.
-- Double-tap / double-click required to open.
-- First tap briefly highlights the icon.
-- Hidden in TV View and Player Display.
+UPDATED
+- Campaign Menu now uses the approved clean Scene Board-style D20.
+- Brass/gold single-color line work.
+- Symmetrical faceted geometry.
+- Central triangular face with “20”.
+- No filled dice artwork.
+- Subtle glow on hover/focus.
+- Campaign Menu popup behavior from V6.6.1 is preserved.
+- Developer Info remains double-tap.
+- Center Dot Zoom and all previous transitions remain.
 
-Center Dot Zoom transition
-- Current scene shrinks into a tiny point in the center.
-- Next scene expands out from the center.
-- Uses the existing 0–5 second transition duration.
+CUMULATIVE
+Includes all previous V6.x features and fixes.
 
-Campaign Menu
-- New line-art D20 icon in the upper-left.
-- Separate popup with X close button.
-- Rename campaign.
-- Save / Load / Share / Export / Import / New Campaign.
-- Session Setup / GM Mode shortcut.
-- Hidden in TV View and Player Display.
+GITHUB UPDATE
+Replace:
+index.html
+sw.js
+manifest.webmanifest
+icon-192.png
+icon-512.png
 
-This package is cumulative through V6.6.
+Confirm the header says “Campaign · Scene Board v6.6.2”.
