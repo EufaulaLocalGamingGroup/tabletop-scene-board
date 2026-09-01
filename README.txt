@@ -1,20 +1,29 @@
-TABLETOP SCENE BOARD V6 — UI OVERHAUL
+TABLETOP SCENE BOARD V6.4 — POWERPOINT-STYLE SCENE TRANSITIONS
 
-V6 focuses on presentation and workflow while retaining the V5.2 scene systems.
+NEW TRANSITION OPTIONS
+- Instant
+- Fade to Black
+- Slide In From Left
+- Slide In From Right
+- Slide In From Bottom
+- Slide In From Top
 
-Highlights
-- Restrained dark fantasy / vintage tabletop appearance.
-- Antique brass/gold primary accent and burgundy warning/danger accent.
-- Session Setup and GM Mode.
-- Guided Session Setup can be reopened for quick fixes.
-- Sticky GM quick controls for scene, character visibility, HP, size, lock, DM Notes, and TV View.
-- Horizontal character portrait strip for fast selection.
-- GM-only brass selection outline.
-- Roster health display preference: numbers, segmented bars, both, or none.
-- Collapsible sections for scene adjustment, characters, health, GM tools/notes, and campaign files.
-- Mobile bottom navigation for Characters, Health, GM Notes, Setup, and TV.
-- Evidence-card styling for Scene Notes and GM-notebook styling for Character Notes.
-- Existing V5.2 background/foreground framing, media, health, conditions, scene placement, turn tracker, saving, sharing, and TV systems remain.
+TRANSITION DURATION
+- One shared duration slider controls all animated transitions.
+- Range: 0.0 to 5.0 seconds.
+- 0.0 seconds = Instant.
+- Selecting an animated transition while duration is 0 restores a sensible 0.8 second default.
+- Transition type and duration are stored with the campaign and synchronized to the local Player Display.
+
+CUMULATIVE
+Includes all previous V6.x improvements:
+- V6 UI overhaul
+- Local split GM / Player Display
+- Health Manager and GM Notes fixes
+- Player/TV health styles including 3/4 numbers
+- Background/foreground clear fixes
+- Direct drag/pinch/wheel scene framing
+- Adjustable transition timing
 
 GITHUB UPDATE
 Replace:
@@ -24,4 +33,4 @@ manifest.webmanifest
 icon-192.png
 icon-512.png
 
-Confirm the header says “Campaign · Scene Board v6”.
+Confirm the header says “Campaign · Scene Board v6.4”.

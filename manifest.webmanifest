@@ -1,7 +1,7 @@
 {
   "name": "Tabletop Scene Board",
   "short_name": "Scene Board",
-  "description": "A polished tabletop GM scene board with Session Setup, compact GM controls, character roster, notes, health, animated scene layers, and TV presentation.",
+  "description": "Tabletop GM scene board with reliable Health and GM Notes drawers, configurable health display styles, local split Player Display, and TV presentation.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
