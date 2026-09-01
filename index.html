@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#1f2d25">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>Tabletop Scene Board v5.2</title>
-<meta name="scene-board-build" content="5.2">
+<title>Tabletop Scene Board v6</title>
+<meta name="scene-board-build" content="6.0">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png" type="image/png">
 <style>
@@ -31,30 +31,73 @@ dialog{border:1px solid var(--line);border-radius:14px;background:var(--panel);c
 .bg-frame-readout{min-width:54px;text-align:right;font-variant-numeric:tabular-nums}
 .bg-frame-locked{opacity:.55}
 
+
+/* V6 restrained dark-fantasy / vintage tabletop UI */
+:root{--bg:#0f0e0d;--panel:#191714;--card:#24201b;--line:#4a4031;--text:#f3eee4;--muted:#b9ad9a;--accent:#c2a35b;--accent2:#e0c77e;--danger:#7b2638;--hp:#a33b4f;--emptyhp:#42282d;--paper:#e8dcc0;--ink:#2b241b}
+body{background:radial-gradient(circle at top,#211d17 0,#100f0d 42%,#0c0b0a 100%);background-attachment:fixed}
+button{background:linear-gradient(#2b261f,#211d18);border-color:#514532;box-shadow:inset 0 1px #ffffff08}
+button:hover{border-color:var(--accent)}button.primary{background:linear-gradient(#d0b36a,#aa8b45);color:#211a0d;border-color:#e3c97e}button.danger{border-color:#7b2638;color:#f2c7cf}
+.topbar,.panel,.tool-card{background:linear-gradient(180deg,#1d1a16f2,#151310f2);border-color:#4b4030;box-shadow:0 8px 26px #0005}
+.stage{border-color:#6a5738;box-shadow:0 12px 34px #0008,0 0 0 1px #c2a35b20}
+.campaign-name{color:#f5e8c8}.small{color:#b9ad9a}
+.mode-pill{border:1px solid #6c5836;border-radius:999px;padding:6px 10px;font-size:12px;color:var(--accent2);background:#120f0bcf;white-space:nowrap}
+.quickbar{position:sticky;top:6px;z-index:910;margin-top:10px;background:#15120feF;border:1px solid #57482f;border-radius:14px;padding:7px;display:flex;gap:6px;align-items:center;overflow-x:auto;box-shadow:0 8px 24px #0007;scrollbar-width:none}.quickbar::-webkit-scrollbar{display:none}.quickbar button{min-height:40px;white-space:nowrap}.quickbar .quick-name{min-width:130px;max-width:190px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:0 8px;font-weight:700;color:#ead9ad}
+.character-strip{display:flex;gap:7px;overflow-x:auto;padding:8px 2px 2px;scrollbar-width:none}.character-strip::-webkit-scrollbar{display:none}.char-chip{flex:0 0 66px;display:grid;gap:3px;justify-items:center;border:1px solid #4a4031;border-radius:10px;padding:5px;background:#171410;min-height:78px}.char-chip.selected{border-color:var(--accent);box-shadow:0 0 0 1px #c2a35b55}.char-chip img{width:48px;height:48px;object-fit:contain}.char-chip span{font-size:10px;max-width:58px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.char-hp{font-size:9px;color:#d7c28b}
+.piece.selected{border-color:var(--accent)!important;box-shadow:0 0 0 1px #e0c77e55;border-radius:9px}
+.v6-shell{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(320px,.7fr);gap:10px;margin-top:10px}.v6-main,.v6-side{display:grid;gap:10px;align-content:start}
+.accordion{border:1px solid #4a4031;border-radius:13px;background:#181511;overflow:hidden}.accordion>summary{cursor:pointer;list-style:none;padding:11px 12px;font-weight:800;color:#e6d5aa;display:flex;justify-content:space-between;align-items:center}.accordion>summary::-webkit-details-marker{display:none}.accordion>summary:after{content:"▾";color:var(--accent)}.accordion:not([open])>summary:after{content:"▸"}.accordion-body{padding:0 10px 10px;display:grid;gap:9px}
+.scene-note-card{background:var(--paper);color:var(--ink);border:1px solid #a38b5b;border-radius:8px;padding:9px;box-shadow:0 4px 14px #0004}.scene-note-card textarea{background:#f2e7cd;color:#2b241b;border-color:#b6a175}
+.gm-notebook{border-left:3px solid var(--accent);padding-left:9px}
+.setup-banner{display:none;margin-top:10px;padding:9px 11px;border:1px solid #7a653e;border-radius:12px;background:#241d12;color:#e9d39d}.setup-mode .setup-banner{display:flex}
+.setup-only{}.gm-mode .setup-only{display:none!important}.setup-mode .gm-only-hide{display:none!important}
+.setup-steps{display:flex;gap:5px;overflow-x:auto}.setup-step{min-height:36px;font-size:12px}
+.bottom-nav{display:none}.drawer-close{display:none}
+.tv-mode .quickbar,.tv-mode .character-strip,.tv-mode .v6-shell,.tv-mode .setup-banner,.tv-mode .bottom-nav{display:none!important}
+@media(max-width:800px){
+ .app{padding:6px 6px 76px}.topbar{padding:8px}.topbar.filebar{display:none}.stage-wrap{margin-top:7px}.stage{border-radius:11px}
+ .quickbar{top:4px;margin-top:7px}.quickbar .desktop-extra{display:none}.character-strip{padding-top:6px}
+ .v6-shell{grid-template-columns:1fr;margin-top:7px}.v6-side{display:none}.mobile-panel{display:none}.mobile-panel.mobile-open{display:grid}
+ .bottom-nav{position:fixed;left:6px;right:6px;bottom:6px;z-index:950;display:grid;grid-template-columns:repeat(5,1fr);gap:4px;background:#120f0bf2;border:1px solid #594a31;border-radius:14px;padding:5px;box-shadow:0 -8px 25px #0008}.bottom-nav button{min-height:48px;padding:4px;font-size:11px}
+ .drawer-close{display:block}.tools-grid{display:block}.tools-grid>.tool-card{margin-bottom:8px}
+ .scene-note-card textarea{min-height:120px}
+}
+
 </style>
 </head>
 <body>
 <div class="app" id="app">
-<div class="topbar">
- <div class="grow"><div class="small">Campaign · Scene Board v5.2</div><div id="campaignTitle" class="campaign-name">Untitled Campaign</div></div>
- <button id="newCampaign">New</button><button id="saveCampaign" class="primary">Save</button><button id="loadCampaign">Load</button><button id="shareCampaign">Share Campaign</button><button id="exportCampaign">Export File</button>
- <label class="filebtn"><button type="button">Import Campaign</button><input id="importFile" type="file" accept=".json,application/json"></label><button id="tvMode">TV View</button>
+<div class="topbar filebar">
+ <div class="grow"><div class="small">Campaign · Scene Board v6</div><div id="campaignTitle" class="campaign-name">Untitled Campaign</div></div>
+ <span id="modePill" class="mode-pill">🎲 GM Mode</span><button id="modeToggle" class="primary">Session Setup</button><button id="newCampaign" class="setup-only">New</button><button id="saveCampaign">Save</button><button id="loadCampaign" class="setup-only">Load</button><button id="shareCampaign" class="setup-only">Share Campaign</button><button id="exportCampaign" class="setup-only">Export File</button>
+ <label class="filebtn setup-only"><button type="button">Import Campaign</button><input id="importFile" type="file" accept=".json,application/json"></label><button id="tvMode">TV View</button>
 </div>
 <div class="topbar" style="margin-top:10px">
  <div class="grow"><div class="small">Scene</div><select id="sceneSelect" style="width:100%"></select></div>
  <button id="newScene">New Scene</button><button id="duplicateScene">Duplicate</button><button id="renameScene">Rename</button><button id="deleteScene" class="danger">Delete</button>
 </div>
+<div id="setupBanner" class="setup-banner row"><strong>🛠 Session Setup</strong><span class="small grow">Prepare the session, then switch back to GM Mode. All game data stays editable.</span><div class="setup-steps"><button class="setup-step" data-jump="sceneTools">1 Scene</button><button class="setup-step" data-jump="sceneAdjust">2 Visuals</button><button class="setup-step" data-jump="characterTools">3 Characters</button><button class="setup-step" data-jump="healthTools">4 Health</button><button class="setup-step" data-jump="gmTools">5 Notes</button></div><button id="startSession" class="primary">▶ Start Session</button></div>
+<div class="quickbar gm-only-hide">
+ <select id="quickScene" aria-label="Quick scene"></select>
+ <button id="quickCharacters">Characters</button>
+ <span id="quickName" class="quick-name">No character selected</span>
+ <button id="quickHide" disabled>👁 Hide</button>
+ <button id="quickHpDown" disabled>HP −</button><button id="quickHpUp" disabled>HP +</button>
+ <button id="quickSmaller" disabled>Size −</button><button id="quickLarger" disabled>Size +</button>
+ <button id="quickLock" disabled>🔒 Lock</button>
+ <button id="quickNotes">📝 DM Notes</button>
+ <button id="quickTv">TV</button>
+</div>
+<div id="characterStrip" class="character-strip gm-only-hide"></div>
 <div class="stage-wrap"><div id="stage" class="stage" tabindex="0"><div id="background" class="background"></div><video id="backgroundVideo" class="background-video" muted loop playsinline preload="auto"></video><div id="empty" class="empty"><div><strong>No scene background</strong><br>Add an image, GIF, MP4, or WebM.</div></div><div id="pieces"></div><div id="foreground" class="foreground"></div><video id="foregroundVideo" class="foreground-video" muted loop playsinline preload="auto"></video><div id="turnBadge" class="turn-badge"></div><div id="fadeOverlay" class="fade-overlay"></div><button id="tvExit" class="tv-exit">Exit TV View</button></div></div>
-<div class="layout">
-<section class="panel stack">
+<div class="v6-shell">
+<div class="v6-main">
+ <details id="sceneTools" class="accordion setup-only" open><summary>Scene Setup & Quick Character Controls</summary><div class="accordion-body"><section class="panel stack">
  <div class="row"><label class="filebtn"><button type="button">Set Background / Video</button><input id="backgroundFile" type="file" accept="image/*,video/mp4,video/webm,video/*"></label><label class="filebtn"><button type="button">Set Foreground</button><input id="foregroundFile" type="file" accept="image/*,video/mp4,video/webm,video/*"></label><button id="clearForeground">Clear Foreground</button><label class="filebtn"><button type="button">Add Character</button><input id="characterFiles" type="file" accept="image/*" multiple></label><button id="resetPositions">Reset Scene Positions</button></div>
  <div><strong id="selectedName">No character selected</strong><div id="status" class="small" aria-live="polite">Ready</div></div>
  <div class="row"><button id="smaller" disabled>−</button><input id="size" type="range" min="40" max="220" value="100" disabled><button id="larger" disabled>+</button><button id="hideReveal" disabled>Hide</button><button id="lockPiece" disabled>Lock Position</button><button id="front" disabled>Bring Forward</button><button id="back" disabled>Send Back</button><button id="remove" class="danger" disabled>Remove</button></div>
  <div class="small stage-help">Each scene remembers character position, scale, visibility, layer, and lock state independently. GIFs animate normally; videos autoplay muted and loop.</div>
-</section>
-<aside class="panel stack"><div class="row" style="justify-content:space-between"><strong>Health Manager</strong><button id="hideAllHealth">Hide All Health</button></div><div class="small">Health is optional and unique to each character. Presets: D4, D6, D8, or Custom.</div><div id="healthList" class="stack"></div><hr style="width:100%;border:0;border-top:1px solid var(--line)"><div class="row" style="justify-content:space-between"><strong>GM Character List</strong><span id="characterCount" class="small"></span></div><div id="characterList" class="stack"></div></aside>
-</div>
-<div class="tools-grid">
+</section></div></details>
+ <details id="sceneAdjust" class="accordion setup-only"><summary>Adjust Background & Foreground</summary><div class="accordion-body">
 <section class="tool-card"><strong>Scene Tools</strong><div class="small">Reusable backgrounds, framing, scene notes, and presentation settings.</div><div class="row"><button id="saveBgLibrary">Save Background to Library</button><select id="bgLibrary" class="compact-select"><option value="">Background Library</option></select><button id="applyBgLibrary">Apply</button><button id="deleteBgLibrary">Delete</button></div>
 <div style="border-top:1px solid var(--line);padding-top:8px;display:grid;gap:8px">
  <div class="row" style="justify-content:space-between"><strong>Background Framing</strong><button id="bgLock">Lock Background</button></div>
@@ -67,7 +110,7 @@ dialog{border:1px solid var(--line);border-radius:14px;background:var(--panel);c
  </div>
  <div class="small">Use Fit Whole Image when the picture is being cropped. Use Zoom and position to focus on one area, then lock it.</div>
 </div>
-<label>Scene transition<select id="transitionSelect" class="compact-select"><option value="none">Instant</option><option value="fade">Fade to Black</option></select></label><label>GM Scene Notes<textarea id="sceneNotes" class="notes" placeholder="Clues, reminders, secrets, scene details..."></textarea></label></section>
+<label>Scene transition<select id="transitionSelect" class="compact-select"><option value="none">Instant</option><option value="fade">Fade to Black</option></select></label><div class="scene-note-card"><label><strong>GM Scene Notes</strong><textarea id="sceneNotes" class="notes" placeholder="Clues, reminders, secrets, scene details..."></textarea></label></div></section>
 
 <section class="tool-card"><strong>Foreground Tools</strong><div class="small">Position still images, GIFs, or looping videos independently from the background.</div>
 <div class="row" style="justify-content:space-between"><strong>Foreground Framing</strong><button id="fgLock">Lock Foreground</button></div>
@@ -80,9 +123,16 @@ dialog{border:1px solid var(--line);border-radius:14px;background:var(--panel);c
  <button id="fgReset">Reset Foreground Framing</button>
 </div>
 <div class="small">Lock it after positioning so it cannot be changed accidentally.</div></section>
-<section class="tool-card"><strong>Selected Character Tools</strong><div id="characterToolEmpty" class="small">Select a character to edit its group, conditions, and GM notes.</div><div id="characterToolBody" class="stack" style="display:none"><label>Group<select id="characterGroup" class="compact-select"><option>Player</option><option>NPC</option><option>Enemy</option><option>Other</option></select></label><div class="row"><input id="conditionInput" class="grow" type="text" maxlength="30" placeholder="Add condition (Scared, Hurt...)"/><button id="addCondition">Add</button></div><label class="small"><input id="conditionsVisible" type="checkbox"> Show conditions to players</label><div id="conditionList" class="condition-list"></div><label>GM Character Notes<textarea id="characterNotes" class="notes" placeholder="Motives, clues, secrets, reminders..."></textarea></label></div></section>
-<section class="tool-card"><strong>Turn Tracker</strong><div class="small">Optional and rules-light. It only tracks whose turn it is.</div><label class="small"><input id="turnEnabled" type="checkbox"> Enable turn tracker</label><label class="small"><input id="turnVisible" type="checkbox"> Show current turn on TV</label><div class="row"><button id="turnPrev">Previous</button><button id="turnNext" class="primary">Next Turn</button><button id="turnReset">Reset</button></div><div id="turnList" class="stack"></div></section>
+</div></details>
+ <details id="characterTools" class="accordion mobile-panel" open><summary>Characters</summary><div class="accordion-body"><aside class="panel stack"><div class="row" style="justify-content:space-between"><strong>Health Manager</strong><button id="hideAllHealth">Hide All Health</button></div><div class="small">Health is optional and unique to each character. Presets: D4, D6, D8, or Custom.</div><div id="healthList" class="stack"></div><hr style="width:100%;border:0;border-top:1px solid var(--line)"><div class="row" style="justify-content:space-between"><strong>GM Character List</strong><span id="characterCount" class="small"></span></div><div id="characterList" class="stack"></div></aside><section class="tool-card"><strong>Selected Character Tools</strong><div id="characterToolEmpty" class="small">Select a character to edit its group, conditions, and GM notes.</div><div id="characterToolBody" class="stack" style="display:none"><label>Group<select id="characterGroup" class="compact-select"><option>Player</option><option>NPC</option><option>Enemy</option><option>Other</option></select></label><div class="row"><input id="conditionInput" class="grow" type="text" maxlength="30" placeholder="Add condition (Scared, Hurt...)"/><button id="addCondition">Add</button></div><label class="small"><input id="conditionsVisible" type="checkbox"> Show conditions to players</label><div id="conditionList" class="condition-list"></div><label class="gm-notebook">GM Character Notes<textarea id="characterNotes" class="notes" placeholder="Motives, clues, secrets, reminders..."></textarea></label></div></section></div></details>
+</div>
+<div class="v6-side">
+ <details id="healthTools" class="accordion mobile-panel" open><summary>Health</summary><div class="accordion-body"><div class="row" style="justify-content:space-between"><strong>Health Manager</strong><button id="v6HideHealth">Hide All Health</button></div><div id="healthMirror" class="small">Use the character cards in Characters for detailed health controls.</div><label>GM roster health display<select id="rosterHealthMode" class="compact-select"><option value="numbers">♥ Numbers</option><option value="bars">Segmented Bar</option><option value="both">♥ + Bar</option><option value="none">None</option></select></label></div></details>
+ <details id="gmTools" class="accordion mobile-panel"><summary>GM Tools & Notes</summary><div class="accordion-body"><div class="scene-note-card"><strong>Current Scene Notes</strong><textarea id="quickSceneNotes" class="notes" placeholder="Clues, reminders, secrets..."></textarea></div><div class="gm-notebook"><strong>Selected Character Notes</strong><textarea id="quickCharacterNotes" class="notes" placeholder="Motives, clues, secrets..."></textarea></div><section class="tool-card"><strong>Turn Tracker</strong><div class="small">Optional and rules-light. It only tracks whose turn it is.</div><label class="small"><input id="turnEnabled" type="checkbox"> Enable turn tracker</label><label class="small"><input id="turnVisible" type="checkbox"> Show current turn on TV</label><div class="row"><button id="turnPrev">Previous</button><button id="turnNext" class="primary">Next Turn</button><button id="turnReset">Reset</button></div><div id="turnList" class="stack"></div></section>
+</div></details>
+ <details id="campaignTools" class="accordion setup-only"><summary>Campaign & Files</summary><div class="accordion-body"><button id="v6New">New Campaign</button><button id="v6Save">Save Campaign</button><button id="v6Load">Load Campaign</button><button id="v6Share">Share Campaign</button><button id="v6Export">Export Campaign</button><button id="v6Import">Import Campaign</button></div></details>
 </div></div>
+<nav class="bottom-nav gm-only-hide"><button data-mobile="characterTools">Characters</button><button data-mobile="healthTools">Health</button><button data-mobile="gmTools">GM Notes</button><button id="mobileSetup">Setup</button><button id="mobileTv">TV</button></nav></div>
 
 <dialog id="newDialog"><form method="dialog"><h3 style="margin:0">Create New Campaign</h3><label>Campaign name<input id="newName" type="text" maxlength="80"></label><div class="row" style="justify-content:flex-end"><button value="cancel">Cancel</button><button id="confirmNew" class="primary">Create</button></div></form></dialog>
 <dialog id="loadDialog"><form method="dialog"><h3 style="margin:0">Load Campaign</h3><div id="savedList" class="stack"></div><div class="row" style="justify-content:flex-end"><button value="cancel">Close</button></div></form></dialog>
@@ -167,6 +217,37 @@ function campFile(){campaign.updatedAt=new Date().toISOString();const safe=(camp
 $("shareCampaign").onclick=async()=>{const {file}=campFile();try{if(navigator.canShare?.({files:[file]})){await navigator.share({title:campaign.name,files:[file],text:"Tabletop Scene Board campaign"})}else status.textContent="Use Export File on this browser."}catch(e){if(e.name!=="AbortError")status.textContent="Share failed; use Export File."}};
 $("exportCampaign").onclick=()=>{const{safe,blob}=campFile(),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=safe+".scene-board.json";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)};
 $("importFile").onchange=async e=>{try{campaign=migrate(JSON.parse(await e.target.files[0].text()));selectedId=null;rebuild();status.textContent="Campaign imported"}catch{status.textContent="Invalid campaign file"}e.target.value=""};
-if("serviceWorker"in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js?v=5.2").catch(()=>{}));rebuild();
+
+// V6 UI state and mirrors
+let uiMode=localStorage.getItem("sceneBoardMode")||"gm";
+let rosterHealthMode=localStorage.getItem("sceneBoardRosterHealth")||"numbers";
+function setUiMode(mode){uiMode=mode;localStorage.setItem("sceneBoardMode",mode);app.classList.toggle("setup-mode",mode==="setup");app.classList.toggle("gm-mode",mode==="gm");$("modePill").textContent=mode==="setup"?"🛠 Session Setup":"🎲 GM Mode";$("modeToggle").textContent=mode==="setup"?"Return to GM Mode":"Session Setup";renderV6()}
+function renderV6(){
+ const qs=$("quickScene"),ss=$("sceneSelect"); if(qs&&ss){qs.innerHTML=ss.innerHTML;qs.value=campaign.currentSceneId}
+ const c=character(), qn=$("quickName"); if(qn)qn.textContent=c?c.name:"No character selected";
+ ["quickHide","quickHpDown","quickHpUp","quickSmaller","quickLarger","quickLock"].forEach(x=>{if($(x))$(x).disabled=!c});
+ if(c){$("quickHide").textContent=placement(c).hidden?"👁 Reveal":"👁 Hide";$("quickLock").textContent=placement(c).locked?"🔓 Unlock":"🔒 Lock"}
+ const strip=$("characterStrip"); if(strip){strip.innerHTML="";campaign.characters.forEach(ch=>{const b=document.createElement("button");b.type="button";b.className="char-chip"+(ch.id===selectedId?" selected":"");const im=document.createElement("img");im.src=ch.image;const nm=document.createElement("span");nm.textContent=ch.name;b.append(im,nm);if(rosterHealthMode!=="none"&&ch.health?.enabled){const hp=document.createElement("div");hp.className="char-hp";const nums=`♥ ${ch.health.current}/${ch.health.max}`;const bars="▮".repeat(Math.min(ch.health.current,8))+"▯".repeat(Math.min(Math.max(ch.health.max-ch.health.current,0),8));hp.textContent=rosterHealthMode==="numbers"?nums:rosterHealthMode==="bars"?bars:nums+" "+bars;b.append(hp)}b.onclick=()=>{selectedId=ch.id;rebuild();renderV6()};strip.append(b)})}
+ if($("rosterHealthMode"))$("rosterHealthMode").value=rosterHealthMode;
+ if($("quickSceneNotes"))$("quickSceneNotes").value=scene().notes||"";
+ if($("quickCharacterNotes")){$("quickCharacterNotes").value=c?.notes||"";$("quickCharacterNotes").disabled=!c}
+}
+$("modeToggle").onclick=()=>setUiMode(uiMode==="gm"?"setup":"gm");$("startSession").onclick=()=>setUiMode("gm");$("mobileSetup").onclick=()=>setUiMode("setup");
+$("quickScene").onchange=e=>{campaign.currentSceneId=e.target.value;selectedId=null;rebuild();renderV6()};
+$("quickCharacters").onclick=()=>{const d=$("characterTools");d.classList.add("mobile-open");d.open=true;d.scrollIntoView({behavior:"smooth",block:"start"})};
+$("quickHide").onclick=()=>{$("hideReveal").click();renderV6()};$("quickSmaller").onclick=()=>{$("smaller").click();renderV6()};$("quickLarger").onclick=()=>{$("larger").click();renderV6()};$("quickLock").onclick=()=>{$("lockPiece").click();renderV6()};
+$("quickHpDown").onclick=()=>{const c=character();if(!c||!c.health?.enabled)return;c.health.current=Math.max(0,c.health.current-1);renderLists();apply(c);renderV6()};
+$("quickHpUp").onclick=()=>{const c=character();if(!c||!c.health?.enabled)return;c.health.current=Math.min(c.health.max,c.health.current+1);renderLists();apply(c);renderV6()};
+$("quickNotes").onclick=()=>{const d=$("gmTools");d.classList.add("mobile-open");d.open=true;d.scrollIntoView({behavior:"smooth",block:"start"})};$("quickTv").onclick=()=>$("tvMode").click();$("mobileTv").onclick=()=>$("tvMode").click();
+$("quickSceneNotes").addEventListener("input",e=>{scene().notes=e.target.value;$("sceneNotes").value=e.target.value});
+$("quickCharacterNotes").addEventListener("input",e=>{const c=character();if(c){c.notes=e.target.value;$("characterNotes").value=e.target.value}});
+$("rosterHealthMode").onchange=e=>{rosterHealthMode=e.target.value;localStorage.setItem("sceneBoardRosterHealth",rosterHealthMode);renderV6()};
+$("v6HideHealth").onclick=()=>$("hideAllHealth").click();$("v6New").onclick=()=>$("newCampaign").click();$("v6Save").onclick=()=>$("saveCampaign").click();$("v6Load").onclick=()=>$("loadCampaign").click();$("v6Share").onclick=()=>$("shareCampaign").click();$("v6Export").onclick=()=>$("exportCampaign").click();$("v6Import").onclick=()=>$("importFile").click();
+document.querySelectorAll("[data-jump]").forEach(b=>b.onclick=()=>{const d=$(b.dataset.jump);if(d){d.open=true;d.scrollIntoView({behavior:"smooth",block:"start"})}});
+document.querySelectorAll("[data-mobile]").forEach(b=>b.onclick=()=>{document.querySelectorAll(".mobile-panel").forEach(x=>x.classList.remove("mobile-open"));const d=$(b.dataset.mobile);d.classList.add("mobile-open");d.open=true});
+const oldRebuild=rebuild;rebuild=function(){oldRebuild();setTimeout(renderV6,0)};
+setUiMode(uiMode);
+
+if("serviceWorker"in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js?v=6.0").catch(()=>{}));rebuild();
 })();
 </script></body></html>

@@ -1,7 +1,7 @@
 {
   "name": "Tabletop Scene Board",
   "short_name": "Scene Board",
-  "description": "Tabletop scene display with independently adjustable animated backgrounds and foreground overlays.",
+  "description": "A polished tabletop GM scene board with Session Setup, compact GM controls, character roster, notes, health, animated scene layers, and TV presentation.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
