@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#1f2d25">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>Tabletop Scene Board v6.6.3</title>
-<meta name="scene-board-build" content="6.6.3">
+<title>Tabletop Scene Board v6.6.4</title>
+<meta name="scene-board-build" content="6.6.4">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png" type="image/png">
 <style>
@@ -290,12 +290,28 @@ button:hover{border-color:var(--accent)}button.primary{background:linear-gradien
   line-height:1.45;
 }
 
+
+/* V6.6.4 robust custom Developer Info overlay */
+.developer-info-dialog{
+  display:none;position:fixed;inset:0;z-index:9000;
+  width:auto;max-width:none;max-height:none;border:0;border-radius:0;padding:16px;
+  background:#050403b8;box-shadow:none;backdrop-filter:blur(3px);
+  align-items:center;justify-content:center;box-sizing:border-box;
+}
+.developer-info-dialog.open{display:flex!important}
+.developer-info-dialog .developer-info-card{
+  width:min(560px,100%);max-height:min(82vh,760px);overflow:auto;
+  border:1px solid #76613a;border-radius:16px;background:#17130f;
+  box-shadow:0 24px 80px #000c;box-sizing:border-box;
+}
+.developer-info-dialog::backdrop{display:none}
+
 </style>
 </head>
 <body>
 <div class="app" id="app">
 <div class="topbar filebar">
- <div class="grow"><div class="small">Campaign · Scene Board v6.6.3</div><div id="campaignTitle" class="campaign-name">Untitled Campaign</div></div>
+ <div class="grow"><div class="small">Campaign · Scene Board v6.6.4</div><div id="campaignTitle" class="campaign-name">Untitled Campaign</div></div>
  <span id="modePill" class="mode-pill">🎲 GM Mode</span><span id="displayLinkPill" class="link-pill">📺 Local Display: Off</span><button id="modeToggle" class="primary">Session Setup</button><button id="newCampaign" class="setup-only">New</button><button id="saveCampaign">Save</button><button id="loadCampaign" class="setup-only">Load</button><button id="shareCampaign" class="setup-only">Share Campaign</button><button id="exportCampaign" class="setup-only">Export File</button>
  <label class="filebtn setup-only"><button type="button">Import Campaign</button><input id="importFile" type="file" accept=".json,application/json"></label><button id="tvMode">TV View</button>
 </div>
@@ -479,7 +495,7 @@ button:hover{border-color:var(--accent)}button.primary{background:linear-gradien
 
 <button id="developerInfoBtn" class="developer-info-btn" type="button" title="Double-tap for Developer Info" aria-label="Developer Info"><span aria-hidden="true">i</span></button>
 
-<dialog id="developerInfoDialog" class="developer-info-dialog">
+<div id="developerInfoDialog" class="developer-info-dialog" role="dialog" aria-modal="true" aria-hidden="true">
   <div class="developer-info-card">
     <div class="developer-info-head">
       <div>
@@ -491,13 +507,13 @@ button:hover{border-color:var(--accent)}button.primary{background:linear-gradien
 
     <div class="developer-version-block">
       <span class="developer-version-label">Current Version</span>
-      <strong class="developer-version">v6.6.3</strong>
+      <strong class="developer-version">v6.6.4</strong>
     </div>
 
     <div class="developer-section">
       <h3>Build Notes</h3>
       <div class="developer-build-notes">
-        <p><strong>V6.6.3</strong> fixes the Developer Info opener and keeps the current build version visible here for update checks.</p>
+        <p><strong>V6.6.4</strong> replaces the Developer Info native dialog with a custom overlay for more reliable opening across devices.</p>
         <p>This build includes all cumulative V6.x features and fixes through V6.6.</p>
       </div>
     </div>
@@ -520,7 +536,7 @@ button:hover{border-color:var(--accent)}button.primary{background:linear-gradien
       </div>
     </div>
   </div>
-</dialog>
+</div>
 
 <script>
 (()=>{"use strict";
@@ -1110,28 +1126,22 @@ let developerLastTap=0;
 
 function openDeveloperInfo(){
   if(!developerInfoDialog)return;
-  if(typeof developerInfoDialog.showModal==="function"){
-    if(!developerInfoDialog.open) developerInfoDialog.showModal();
-  }else{
-    developerInfoDialog.setAttribute("open","");
-  }
+  developerInfoDialog.classList.add("open");
+  developerInfoDialog.setAttribute("aria-hidden","false");
+  document.body.style.overflow="hidden";
+}
+function closeDeveloperInfo(){
+  if(!developerInfoDialog)return;
+  developerInfoDialog.classList.remove("open");
+  developerInfoDialog.setAttribute("aria-hidden","true");
+  document.body.style.overflow="";
 }
 
-developerInfoBtn?.addEventListener("dblclick",e=>{
+developerInfoBtn?.addEventListener("click",e=>{
   e.preventDefault();
   e.stopPropagation();
-  developerInfoBtn.classList.remove("awaiting-second-tap");
-  developerLastTap=0;
-  clearTimeout(developerTapTimer);
-  openDeveloperInfo();
-});
-
-developerInfoBtn?.addEventListener("pointerup",e=>{
-  // Mouse/trackpad uses native dblclick above. This branch handles touch/pen.
-  if(e.pointerType==="mouse") return;
-  e.preventDefault();
   const now=Date.now();
-  if(now-developerLastTap<=500){
+  if(now-developerLastTap<=650){
     developerLastTap=0;
     clearTimeout(developerTapTimer);
     developerInfoBtn.classList.remove("awaiting-second-tap");
@@ -1144,16 +1154,12 @@ developerInfoBtn?.addEventListener("pointerup",e=>{
   developerTapTimer=setTimeout(()=>{
     developerLastTap=0;
     developerInfoBtn.classList.remove("awaiting-second-tap");
-  },520);
+  },680);
 });
-developerInfoClose?.addEventListener("click",()=>{
-  if(!developerInfoDialog)return;
-  if(typeof developerInfoDialog.close==="function")developerInfoDialog.close();
-  else developerInfoDialog.removeAttribute("open");
-});
-developerInfoDialog?.addEventListener("click",e=>{
-  if(e.target===developerInfoDialog)developerInfoDialog.close();
-});
+
+developerInfoClose?.addEventListener("click",e=>{e.preventDefault();e.stopPropagation();closeDeveloperInfo()});
+developerInfoDialog?.addEventListener("click",e=>{if(e.target===developerInfoDialog)closeDeveloperInfo()});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&developerInfoDialog?.classList.contains("open"))closeDeveloperInfo()});
 $("clearDeveloperNotes")?.addEventListener("click",()=>{
   if(!developerCustomNotes)return;
   developerCustomNotes.value="";
@@ -1161,7 +1167,7 @@ $("clearDeveloperNotes")?.addEventListener("click",()=>{
   if(developerNoteSaved)developerNoteSaved.textContent="Notes cleared.";
 });
 
-if("serviceWorker"in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js?v=6.6.3").catch(()=>{}));rebuild();
+if("serviceWorker"in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js?v=6.6.4").catch(()=>{}));rebuild();
 })();
 </script>
 

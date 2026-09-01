@@ -1,30 +1,13 @@
-TABLETOP SCENE BOARD V6.6.3 — DEVELOPER INFO FIX
+TABLETOP SCENE BOARD V6.6.4 — DEVELOPER INFO OVERLAY FIX
 
 FIXED
-- Developer Info now opens reliably with:
-  - double-click on mouse/trackpad
-  - double-tap on touch/pen
-- Added a safer fallback for browsers where native dialog behavior is limited.
-- X close button remains.
-- Developer Info clearly shows current version: v6.6.3.
-- Added message:
-  "special thanks to my testing team Otto Yanders"
+- Developer Info no longer relies on the browser native <dialog> popup.
+- It now uses a custom full-screen overlay for better Android/PWA/browser reliability.
+- Double-tap / double-click is detected using normal click timing, with a 650 ms window.
+- X closes the overlay.
+- Clicking outside the card closes it.
+- Escape closes it on keyboard devices.
+- Current version shown: v6.6.4.
+- Includes: special thanks to my testing team Otto Yanders
 
-PRESERVED
-- Approved line-art D20 Campaign Menu icon.
-- Campaign Menu popup.
-- Center Dot Zoom transition.
-- All cumulative V6.x features and fixes.
-
-GITHUB UPDATE
-Replace:
-index.html
-sw.js
-manifest.webmanifest
-icon-192.png
-icon-512.png
-
-Confirm:
-- Header says “Campaign · Scene Board v6.6.3”
-- Double-click/double-tap the circled-i opens Developer Info
-- Developer Info displays v6.6.3
+All previous V6.x features are preserved.
