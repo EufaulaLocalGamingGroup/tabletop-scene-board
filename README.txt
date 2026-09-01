@@ -1,20 +1,24 @@
-Tabletop Scene Board v4
+Tabletop Scene Board v4.1 — cache/update fix
 
-NEW
-- Scene backgrounds can be images, animated GIFs, MP4s, or WebMs.
-- Videos autoplay muted, loop, and stay active until the scene/background changes.
-- 20 MB warning for large backgrounds.
-- Per-character optional health with D4, D6, D8, or Custom maximum.
-- Current health is independently adjustable for every character.
-- Each character's health can be shown to or hidden from players.
-- Hide All Health button.
-- Each scene independently remembers character position, scale, visibility, layer, and lock state.
-- Duplicate Scene.
-- Lock/unlock character position.
-- Imports older Scene Board campaign files and migrates them to v4.
-- Uses the custom Scene Board app icon.
+WHAT CHANGED
+- Keeps all V4 features, including Health Manager.
+- The main app page now checks the live GitHub Pages version before using cache.
+- If you are offline, the last cached page still opens.
+- Old Scene Board caches are automatically removed when this service worker activates.
+- The app visibly says "Campaign · Scene Board v4.1" so you can confirm the correct build loaded.
+- The service worker registers with a versioned URL to force browsers to fetch the update.
 
-GITHUB UPDATE
-Replace index.html, manifest.webmanifest, and sw.js in your repository.
-Add/replace icon-192.png and icon-512.png.
-Commit the changes and allow GitHub Pages a minute or two to update.
+UPLOAD TO GITHUB
+Replace/upload these files in the repository root:
+- index.html
+- sw.js
+- manifest.webmanifest
+- icon-192.png
+- icon-512.png
+
+After GitHub Pages deploys:
+1. Open the website in Chrome.
+2. Refresh once.
+3. Look for "Campaign · Scene Board v4.1".
+4. You should also see Duplicate, Set Background / Video, Lock Position, and Health Manager.
+5. If an already-installed PWA still shows the old UI, close it completely and reopen it after visiting the site once in Chrome. If needed, uninstall/reinstall the PWA one final time.

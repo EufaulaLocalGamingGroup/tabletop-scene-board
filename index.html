@@ -5,7 +5,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#1f2d25">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>Tabletop Scene Board</title>
+<title>Tabletop Scene Board v4.1</title>
+<meta name="scene-board-build" content="4.1">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png" type="image/png">
 <style>
@@ -27,7 +28,7 @@ dialog{border:1px solid var(--line);border-radius:14px;background:var(--panel);c
 <body>
 <div class="app" id="app">
 <div class="topbar">
- <div class="grow"><div class="small">Campaign</div><div id="campaignTitle" class="campaign-name">Untitled Campaign</div></div>
+ <div class="grow"><div class="small">Campaign · Scene Board v4.1</div><div id="campaignTitle" class="campaign-name">Untitled Campaign</div></div>
  <button id="newCampaign">New</button><button id="saveCampaign" class="primary">Save</button><button id="loadCampaign">Load</button><button id="shareCampaign">Share Campaign</button><button id="exportCampaign">Export File</button>
  <label class="filebtn"><button type="button">Import Campaign</button><input id="importFile" type="file" accept=".json,application/json"></label><button id="tvMode">TV View</button>
 </div>
@@ -95,6 +96,6 @@ function campFile(){campaign.updatedAt=new Date().toISOString();const safe=(camp
 $("shareCampaign").onclick=async()=>{const {file}=campFile();try{if(navigator.canShare?.({files:[file]})){await navigator.share({title:campaign.name,files:[file],text:"Tabletop Scene Board campaign"})}else status.textContent="Use Export File on this browser."}catch(e){if(e.name!=="AbortError")status.textContent="Share failed; use Export File."}};
 $("exportCampaign").onclick=()=>{const{safe,blob}=campFile(),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=safe+".scene-board.json";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)};
 $("importFile").onchange=async e=>{try{campaign=migrate(JSON.parse(await e.target.files[0].text()));selectedId=null;rebuild();status.textContent="Campaign imported"}catch{status.textContent="Invalid campaign file"}e.target.value=""};
-if("serviceWorker"in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));rebuild();
+if("serviceWorker"in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js?v=4.1").catch(()=>{}));rebuild();
 })();
 </script></body></html>
