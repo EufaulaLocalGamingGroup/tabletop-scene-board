@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#1f2d25">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>Tabletop Scene Board v6.6.2</title>
-<meta name="scene-board-build" content="6.6.2">
+<title>Tabletop Scene Board v6.6.3</title>
+<meta name="scene-board-build" content="6.6.3">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png" type="image/png">
 <style>
@@ -276,12 +276,26 @@ button:hover{border-color:var(--accent)}button.primary{background:linear-gradien
   filter:drop-shadow(0 0 5px #d9bd7355);
 }
 
+
+.developer-thanks{
+  background:#211a11;
+  border:1px solid #5b492d;
+  border-radius:10px;
+  padding:12px;
+}
+.developer-thanks p{
+  margin:0;
+  color:#e2cf99;
+  font-size:13px;
+  line-height:1.45;
+}
+
 </style>
 </head>
 <body>
 <div class="app" id="app">
 <div class="topbar filebar">
- <div class="grow"><div class="small">Campaign · Scene Board v6.6.2</div><div id="campaignTitle" class="campaign-name">Untitled Campaign</div></div>
+ <div class="grow"><div class="small">Campaign · Scene Board v6.6.3</div><div id="campaignTitle" class="campaign-name">Untitled Campaign</div></div>
  <span id="modePill" class="mode-pill">🎲 GM Mode</span><span id="displayLinkPill" class="link-pill">📺 Local Display: Off</span><button id="modeToggle" class="primary">Session Setup</button><button id="newCampaign" class="setup-only">New</button><button id="saveCampaign">Save</button><button id="loadCampaign" class="setup-only">Load</button><button id="shareCampaign" class="setup-only">Share Campaign</button><button id="exportCampaign" class="setup-only">Export File</button>
  <label class="filebtn setup-only"><button type="button">Import Campaign</button><input id="importFile" type="file" accept=".json,application/json"></label><button id="tvMode">TV View</button>
 </div>
@@ -477,18 +491,24 @@ button:hover{border-color:var(--accent)}button.primary{background:linear-gradien
 
     <div class="developer-version-block">
       <span class="developer-version-label">Current Version</span>
-      <strong class="developer-version">v6.6.2</strong>
+      <strong class="developer-version">v6.6.3</strong>
     </div>
 
     <div class="developer-section">
       <h3>Build Notes</h3>
       <div class="developer-build-notes">
-        <p><strong>V6.6.2</strong> updates the Campaign Menu button with the cleaner Scene Board-style line-art D20.</p>
+        <p><strong>V6.6.3</strong> fixes the Developer Info opener and keeps the current build version visible here for update checks.</p>
         <p>This build includes all cumulative V6.x features and fixes through V6.6.</p>
       </div>
     </div>
 
-    <div class="developer-section">
+    
+    <div class="developer-section developer-thanks">
+      <h3>Special Thanks</h3>
+      <p>special thanks to my testing team Otto Yanders</p>
+    </div>
+
+<div class="developer-section">
       <div class="developer-notes-title">
         <h3>My Developer Notes</h3>
         <span>Saved on this device</span>
@@ -1087,14 +1107,35 @@ if(developerCustomNotes){
 }
 let developerTapTimer=null;
 let developerLastTap=0;
+
+function openDeveloperInfo(){
+  if(!developerInfoDialog)return;
+  if(typeof developerInfoDialog.showModal==="function"){
+    if(!developerInfoDialog.open) developerInfoDialog.showModal();
+  }else{
+    developerInfoDialog.setAttribute("open","");
+  }
+}
+
+developerInfoBtn?.addEventListener("dblclick",e=>{
+  e.preventDefault();
+  e.stopPropagation();
+  developerInfoBtn.classList.remove("awaiting-second-tap");
+  developerLastTap=0;
+  clearTimeout(developerTapTimer);
+  openDeveloperInfo();
+});
+
 developerInfoBtn?.addEventListener("pointerup",e=>{
+  // Mouse/trackpad uses native dblclick above. This branch handles touch/pen.
+  if(e.pointerType==="mouse") return;
   e.preventDefault();
   const now=Date.now();
-  if(now-developerLastTap<=420){
+  if(now-developerLastTap<=500){
     developerLastTap=0;
     clearTimeout(developerTapTimer);
     developerInfoBtn.classList.remove("awaiting-second-tap");
-    developerInfoDialog?.showModal();
+    openDeveloperInfo();
     return;
   }
   developerLastTap=now;
@@ -1103,9 +1144,13 @@ developerInfoBtn?.addEventListener("pointerup",e=>{
   developerTapTimer=setTimeout(()=>{
     developerLastTap=0;
     developerInfoBtn.classList.remove("awaiting-second-tap");
-  },430);
+  },520);
 });
-developerInfoClose?.addEventListener("click",()=>developerInfoDialog?.close());
+developerInfoClose?.addEventListener("click",()=>{
+  if(!developerInfoDialog)return;
+  if(typeof developerInfoDialog.close==="function")developerInfoDialog.close();
+  else developerInfoDialog.removeAttribute("open");
+});
 developerInfoDialog?.addEventListener("click",e=>{
   if(e.target===developerInfoDialog)developerInfoDialog.close();
 });
@@ -1116,7 +1161,7 @@ $("clearDeveloperNotes")?.addEventListener("click",()=>{
   if(developerNoteSaved)developerNoteSaved.textContent="Notes cleared.";
 });
 
-if("serviceWorker"in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js?v=6.6.2").catch(()=>{}));rebuild();
+if("serviceWorker"in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js?v=6.6.3").catch(()=>{}));rebuild();
 })();
 </script>
 
