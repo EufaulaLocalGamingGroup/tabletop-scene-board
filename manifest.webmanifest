@@ -1,7 +1,7 @@
 {
   "name": "Tabletop Scene Board",
   "short_name": "Scene Board",
-  "description": "A cast-friendly tabletop scene board with campaigns, multiple scenes, and campaign sharing.",
+  "description": "A lightweight tabletop scene display with animated backgrounds, scene-specific character placement, and optional health tracking.",
   "start_url": "./",
   "display": "standalone",
   "background_color": "#101612",

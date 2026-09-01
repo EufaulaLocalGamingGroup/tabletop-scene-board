@@ -1,158 +1,100 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#1f2d25">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="Scene Board">
-  <title>Tabletop Scene Board</title>
-  <link rel="manifest" href="manifest.webmanifest">
-  <link rel="icon" href="icon.svg" type="image/svg+xml">
-  <style>
-    :root{color-scheme:dark;--bg:#101612;--panel:#19231d;--card:#223027;--line:#3b4b40;--text:#f1f4f1;--muted:#aeb9b1;--accent:#8fb69d;--danger:#bd6c6c}
-    *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
-    button,input,select{font:inherit} button{min-height:44px;border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:10px;padding:8px 12px}
-    button.primary{background:var(--accent);color:#102016;border-color:transparent;font-weight:700} button.danger{border-color:var(--danger)} button:disabled{opacity:.45}
-    .app{max-width:1400px;margin:auto;padding:12px}.topbar,.panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:10px}
-    .topbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.grow{flex:1;min-width:180px}.campaign-name{font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .stage-wrap{margin-top:10px}.stage{position:relative;aspect-ratio:16/9;width:100%;overflow:hidden;border:1px solid var(--line);border-radius:14px;background:#263229;touch-action:none;user-select:none}
-    .background{position:absolute;inset:0;background-size:cover;background-position:center}.empty{position:absolute;inset:0;display:grid;place-items:center;text-align:center;color:var(--muted);padding:24px}
-    .piece{position:absolute;left:50%;top:80%;width:120px;transform:translate(-50%,-100%) scale(1);transform-origin:center bottom;border:2px solid transparent;background:transparent;padding:0;min-height:0;cursor:grab;touch-action:none}
-    .piece img{display:block;width:100%;height:auto;max-height:70vh;object-fit:contain;pointer-events:none;filter:drop-shadow(0 5px 5px #0008)}.piece .label{display:block;width:max-content;max-width:100%;margin:4px auto 0;padding:2px 6px;border-radius:5px;background:#000b;color:white;font-size:11px;font-weight:700;overflow:hidden;text-overflow:ellipsis}
-    .piece.selected{border-color:white;border-radius:8px}.piece.hidden{display:none!important}.layout{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(280px,.7fr);gap:10px;margin-top:10px}
-    .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.stack{display:grid;gap:8px}.character-row{display:grid;grid-template-columns:48px minmax(0,1fr) auto;gap:8px;align-items:center;border:1px solid var(--line);border-radius:10px;padding:6px}
-    .character-row img{width:48px;height:48px;object-fit:contain;background:var(--card);border-radius:8px}.small{font-size:12px;color:var(--muted)}.filebtn{position:relative;overflow:hidden}.filebtn input{position:absolute;inset:0;opacity:0;cursor:pointer}
-    input[type=range]{min-width:150px;flex:1} select,input[type=text]{width:100%;min-height:44px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--text);padding:8px 10px}
-    dialog{border:1px solid var(--line);border-radius:14px;background:var(--panel);color:var(--text);width:min(520px,calc(100% - 24px))}dialog::backdrop{background:#000a}dialog form{display:grid;gap:12px}
-    .saved-list{display:grid;gap:8px;max-height:360px;overflow:auto}.saved-item{display:flex;gap:8px;align-items:center;justify-content:space-between;border:1px solid var(--line);border-radius:10px;padding:8px}
-    .tv-mode .topbar,.tv-mode .layout,.tv-mode .stage-help{display:none}.tv-mode .app{padding:0;max-width:none}.tv-mode .stage-wrap{margin:0}.tv-mode .stage{border:0;border-radius:0}.tv-mode .piece{border-color:transparent!important}.tv-mode .piece .label{display:none}
-    .tv-exit{display:none;position:absolute;right:8px;bottom:8px;z-index:999;background:#0009}.tv-mode .tv-exit{display:block}
-    @media(max-width:800px){.layout{grid-template-columns:1fr}.app{padding:8px}.piece{width:95px}}
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#1f2d25">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Tabletop Scene Board</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png" type="image/png">
+<style>
+:root{color-scheme:dark;--bg:#101612;--panel:#19231d;--card:#223027;--line:#3b4b40;--text:#f1f4f1;--muted:#aeb9b1;--accent:#8fb69d;--danger:#bd6c6c;--hp:#b85b55;--emptyhp:#493331}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+button,input,select{font:inherit}button{min-height:44px;border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:10px;padding:8px 12px}button.primary{background:var(--accent);color:#102016;border-color:transparent;font-weight:700}button.danger{border-color:var(--danger)}button:disabled{opacity:.45}
+.app{max-width:1400px;margin:auto;padding:12px}.topbar,.panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:10px}.topbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.grow{flex:1;min-width:180px}.campaign-name{font-weight:700}
+.stage-wrap{margin-top:10px}.stage{position:relative;aspect-ratio:16/9;width:100%;overflow:hidden;border:1px solid var(--line);border-radius:14px;background:#263229;touch-action:none;user-select:none}
+.background,.background-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.background{background-size:cover;background-position:center}.background-video{display:none;background:#000}.empty{position:absolute;inset:0;display:grid;place-items:center;text-align:center;color:var(--muted);padding:24px}
+.piece{position:absolute;left:50%;top:80%;width:120px;transform:translate(-50%,-100%) scale(1);transform-origin:center bottom;border:2px solid transparent;background:transparent;padding:0;min-height:0;cursor:grab;touch-action:none}.piece.locked{cursor:default}.piece img{display:block;width:100%;height:auto;max-height:70vh;object-fit:contain;pointer-events:none;filter:drop-shadow(0 5px 5px #0008)}.piece .label{display:block;width:max-content;max-width:100%;margin:4px auto 0;padding:2px 6px;border-radius:5px;background:#000b;color:white;font-size:11px;font-weight:700;overflow:hidden;text-overflow:ellipsis}.piece.selected{border-color:white;border-radius:8px}.piece.hidden{display:none!important}
+.hp-display{display:flex;gap:3px;justify-content:center;margin:0 auto 4px;max-width:100%;filter:drop-shadow(0 2px 2px #000)}.hp-seg{height:7px;min-width:7px;flex:1;max-width:24px;border:1px solid #e9d8d5;background:var(--emptyhp);border-radius:3px}.hp-seg.full{background:var(--hp)}
+.layout{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(320px,.8fr);gap:10px;margin-top:10px}.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.stack{display:grid;gap:8px}.character-row{display:grid;grid-template-columns:48px minmax(0,1fr) auto;gap:8px;align-items:center;border:1px solid var(--line);border-radius:10px;padding:6px}.character-row img{width:48px;height:48px;object-fit:contain;background:var(--card);border-radius:8px}.small{font-size:12px;color:var(--muted)}.filebtn{position:relative;overflow:hidden}.filebtn input{position:absolute;inset:0;opacity:0;cursor:pointer}
+input[type=range]{min-width:150px;flex:1}select,input[type=text],input[type=number]{min-height:44px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--text);padding:8px 10px}.health-card{border:1px solid var(--line);border-radius:12px;padding:10px;display:grid;gap:8px}.health-line{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:center}.health-controls{display:flex;gap:6px;align-items:center;flex-wrap:wrap}.health-controls select{width:auto}.health-controls input[type=number]{width:74px}
+dialog{border:1px solid var(--line);border-radius:14px;background:var(--panel);color:var(--text);width:min(520px,calc(100% - 24px))}dialog::backdrop{background:#000a}dialog form{display:grid;gap:12px}
+.tv-mode .topbar,.tv-mode .layout,.tv-mode .stage-help{display:none}.tv-mode .app{padding:0;max-width:none}.tv-mode .stage-wrap{margin:0}.tv-mode .stage{border:0;border-radius:0}.tv-mode .piece{border-color:transparent!important}.tv-mode .piece .label{display:none}.tv-exit{display:none;position:absolute;right:8px;bottom:8px;z-index:999;background:#0009}.tv-mode .tv-exit{display:block}
+@media(max-width:800px){.layout{grid-template-columns:1fr}.app{padding:8px}.piece{width:95px}.health-line{grid-template-columns:1fr}}
+</style>
 </head>
 <body>
 <div class="app" id="app">
-  <div class="topbar">
-    <div class="grow"><div class="small">Campaign</div><div id="campaignTitle" class="campaign-name">Untitled Campaign</div></div>
-    <button id="newCampaign">New</button>
-    <button id="saveCampaign" class="primary">Save</button>
-    <button id="loadCampaign">Load</button>
-    <button id="shareCampaign">Share Campaign</button>
-    <button id="exportCampaign">Export File</button>
-    <label class="filebtn"><button type="button">Import Campaign</button><input id="importFile" type="file" accept=".json,application/json"></label>
-    <button id="tvMode">TV View</button>
-  </div>
-
-  <div class="topbar" style="margin-top:10px">
-    <div class="grow"><div class="small">Scene</div><select id="sceneSelect" aria-label="Current scene"></select></div>
-    <button id="newScene">New Scene</button>
-    <button id="renameScene">Rename</button>
-    <button id="deleteScene" class="danger">Delete</button>
-  </div>
-
-  <div class="stage-wrap">
-    <div id="stage" class="stage" tabindex="0">
-      <div id="background" class="background"></div>
-      <div id="empty" class="empty"><div><strong>No scene loaded</strong><br>Use “Set Scene Background” below to add a location image.</div></div>
-      <div id="pieces"></div>
-      <button id="tvExit" class="tv-exit" type="button">Exit TV View</button>
-    </div>
-  </div>
-
-  <div class="layout">
-    <section class="panel stack">
-      <div class="row">
-        <label class="filebtn"><button type="button">Set Scene Background</button><input id="backgroundFile" type="file" accept="image/*"></label>
-        <label class="filebtn"><button type="button">Add Character</button><input id="characterFiles" type="file" accept="image/png,image/webp,image/*" multiple></label>
-        <button id="resetPositions" type="button">Reset Positions</button>
-      </div>
-      <div><strong id="selectedName">No character selected</strong><div id="status" class="small" aria-live="polite">Ready</div></div>
-      <div class="row">
-        <button id="smaller" disabled>−</button><input id="size" type="range" min="40" max="220" value="100" disabled>
-        <button id="larger" disabled>+</button><button id="hideReveal" disabled>Hide</button><button id="front" disabled>Bring Forward</button><button id="back" disabled>Send Back</button><button id="remove" class="danger" disabled>Remove</button>
-      </div>
-      <div class="small stage-help">Share Campaign sends the campaign file through your device’s share menu when supported. Export File remains available as a fallback.</div>
-    </section>
-    <aside class="panel"><div class="row" style="justify-content:space-between;margin-bottom:8px"><strong>GM Character List</strong><span id="characterCount" class="small">0</span></div><div id="characterList" class="stack"></div></aside>
-  </div>
+<div class="topbar">
+ <div class="grow"><div class="small">Campaign</div><div id="campaignTitle" class="campaign-name">Untitled Campaign</div></div>
+ <button id="newCampaign">New</button><button id="saveCampaign" class="primary">Save</button><button id="loadCampaign">Load</button><button id="shareCampaign">Share Campaign</button><button id="exportCampaign">Export File</button>
+ <label class="filebtn"><button type="button">Import Campaign</button><input id="importFile" type="file" accept=".json,application/json"></label><button id="tvMode">TV View</button>
 </div>
+<div class="topbar" style="margin-top:10px">
+ <div class="grow"><div class="small">Scene</div><select id="sceneSelect" style="width:100%"></select></div>
+ <button id="newScene">New Scene</button><button id="duplicateScene">Duplicate</button><button id="renameScene">Rename</button><button id="deleteScene" class="danger">Delete</button>
+</div>
+<div class="stage-wrap"><div id="stage" class="stage" tabindex="0"><div id="background" class="background"></div><video id="backgroundVideo" class="background-video" muted loop playsinline preload="auto"></video><div id="empty" class="empty"><div><strong>No scene background</strong><br>Add an image, GIF, MP4, or WebM.</div></div><div id="pieces"></div><button id="tvExit" class="tv-exit">Exit TV View</button></div></div>
+<div class="layout">
+<section class="panel stack">
+ <div class="row"><label class="filebtn"><button type="button">Set Background / Video</button><input id="backgroundFile" type="file" accept="image/*,video/mp4,video/webm,video/*"></label><label class="filebtn"><button type="button">Add Character</button><input id="characterFiles" type="file" accept="image/*" multiple></label><button id="resetPositions">Reset Scene Positions</button></div>
+ <div><strong id="selectedName">No character selected</strong><div id="status" class="small" aria-live="polite">Ready</div></div>
+ <div class="row"><button id="smaller" disabled>−</button><input id="size" type="range" min="40" max="220" value="100" disabled><button id="larger" disabled>+</button><button id="hideReveal" disabled>Hide</button><button id="lockPiece" disabled>Lock Position</button><button id="front" disabled>Bring Forward</button><button id="back" disabled>Send Back</button><button id="remove" class="danger" disabled>Remove</button></div>
+ <div class="small stage-help">Each scene remembers character position, scale, visibility, layer, and lock state independently. GIFs animate normally; videos autoplay muted and loop.</div>
+</section>
+<aside class="panel stack"><div class="row" style="justify-content:space-between"><strong>Health Manager</strong><button id="hideAllHealth">Hide All Health</button></div><div class="small">Health is optional and unique to each character. Presets: D4, D6, D8, or Custom.</div><div id="healthList" class="stack"></div><hr style="width:100%;border:0;border-top:1px solid var(--line)"><div class="row" style="justify-content:space-between"><strong>GM Character List</strong><span id="characterCount" class="small"></span></div><div id="characterList" class="stack"></div></aside>
+</div></div>
 
-<dialog id="newDialog"><form method="dialog"><h3 style="margin:0">Create New Campaign</h3><label>Campaign name<input id="newName" type="text" maxlength="80" placeholder="Saturday Mystery"></label><div class="small">Save first if you want to keep your current board.</div><div class="row" style="justify-content:flex-end"><button value="cancel">Cancel</button><button id="confirmNew" value="default" class="primary">Create</button></div></form></dialog>
-<dialog id="loadDialog"><form method="dialog"><h3 style="margin:0">Load Campaign</h3><div id="savedList" class="saved-list"></div><div class="row" style="justify-content:flex-end"><button value="cancel">Close</button></div></form></dialog>
-<dialog id="sceneDialog"><form method="dialog"><h3 id="sceneDialogTitle" style="margin:0">New Scene</h3><label>Scene name<input id="sceneNameInput" type="text" maxlength="80" placeholder="Moonlit Woods"></label><div class="row" style="justify-content:flex-end"><button value="cancel">Cancel</button><button id="sceneDialogConfirm" value="default" class="primary">Save</button></div></form></dialog>
-
+<dialog id="newDialog"><form method="dialog"><h3 style="margin:0">Create New Campaign</h3><label>Campaign name<input id="newName" type="text" maxlength="80"></label><div class="row" style="justify-content:flex-end"><button value="cancel">Cancel</button><button id="confirmNew" class="primary">Create</button></div></form></dialog>
+<dialog id="loadDialog"><form method="dialog"><h3 style="margin:0">Load Campaign</h3><div id="savedList" class="stack"></div><div class="row" style="justify-content:flex-end"><button value="cancel">Close</button></div></form></dialog>
+<dialog id="sceneDialog"><form method="dialog"><h3 id="sceneDialogTitle" style="margin:0">New Scene</h3><label>Scene name<input id="sceneNameInput" type="text" maxlength="80"></label><div class="row" style="justify-content:flex-end"><button value="cancel">Cancel</button><button id="sceneDialogConfirm" class="primary">Save</button></div></form></dialog>
 <script>
-(() => {
-"use strict";
-const $=id=>document.getElementById(id), app=$("app"),stage=$("stage"),bg=$("background"),empty=$("empty"),pieces=$("pieces"),title=$("campaignTitle"),status=$("status"),selectedName=$("selectedName"),list=$("characterList");
-const controls=["size","smaller","larger","hideReveal","front","back","remove"].map($);
+(()=>{"use strict";
+const $=id=>document.getElementById(id),app=$("app"),stage=$("stage"),bg=$("background"),bgv=$("backgroundVideo"),empty=$("empty"),pieces=$("pieces"),status=$("status"),list=$("characterList"),healthList=$("healthList");
 let selectedId=null,zTop=10,sceneDialogMode="new";
-
-function makeId(){return crypto.randomUUID?crypto.randomUUID():String(Date.now()+Math.random())}
-function freshScene(name){return {id:makeId(),name:name||"Scene 1",background:null}}
-function freshCampaign(name){const s=freshScene("Scene 1");return {version:3,id:makeId(),name:name||"Untitled Campaign",scenes:[s],currentSceneId:s.id,characters:[],updatedAt:new Date().toISOString()}}
-let campaign=freshCampaign("Untitled Campaign");
-
-function migrateCampaign(obj){
-  if(!obj||!Array.isArray(obj.characters)||typeof obj.name!=="string") throw new Error("Invalid file");
-  if(!Array.isArray(obj.scenes)||!obj.scenes.length){const s=freshScene("Scene 1");s.background=obj.background||null;obj.scenes=[s];obj.currentSceneId=s.id;delete obj.background}
-  obj.scenes=obj.scenes.map((s,i)=>({id:s.id||makeId(),name:s.name||`Scene ${i+1}`,background:s.background||null}));
-  obj.currentSceneId=obj.currentSceneId||obj.scenes[0].id;obj.id=obj.id||makeId();obj.version=3;return obj;
-}
-function currentScene(){let s=campaign.scenes.find(x=>x.id===campaign.currentSceneId);if(!s){s=campaign.scenes[0];campaign.currentSceneId=s.id}return s}
-const fileToDataURL=f=>new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=rej;r.readAsDataURL(f)});
-const cleanName=n=>(n||"Character").replace(/\.[^.]+$/,"").replace(/[_-]+/g," ").trim()||"Character";
-const selected=()=>campaign.characters.find(c=>c.id===selectedId)||null;
-
-function setEnabled(on){controls.forEach(x=>x.disabled=!on)}
-function updateSelection(){const c=selected();pieces.querySelectorAll(".piece").forEach(p=>p.classList.toggle("selected",!!c&&p.dataset.id===c.id));if(!c){selectedName.textContent="No character selected";setEnabled(false);return}selectedName.textContent=c.name+(c.hidden?" — hidden":"");$("size").value=c.scale;$("hideReveal").textContent=c.hidden?"Reveal":"Hide";setEnabled(true)}
-function applyPiece(c){const p=pieces.querySelector(`[data-id="${CSS.escape(c.id)}"]`);if(!p)return;p.style.left=c.x+"%";p.style.top=c.y+"%";p.style.width=(c.base||120)+"px";p.style.transform=`translate(-50%,-100%) scale(${c.scale/100})`;p.style.zIndex=c.z;p.classList.toggle("hidden",!!c.hidden)}
-function buildPiece(c){const p=document.createElement("button");p.type="button";p.className="piece";p.dataset.id=c.id;const img=document.createElement("img");img.src=c.src;img.alt=c.name;const lab=document.createElement("span");lab.className="label";lab.textContent=c.name;p.append(img,lab);pieces.append(p);applyPiece(c);p.addEventListener("click",()=>{selectedId=c.id;updateSelection()});p.addEventListener("pointerdown",e=>{if(c.hidden)return;selectedId=c.id;updateSelection();p.setPointerCapture(e.pointerId);p._drag={r:stage.getBoundingClientRect()}});p.addEventListener("pointermove",e=>{if(!p._drag)return;const r=p._drag.r;c.x=Math.max(2,Math.min(98,((e.clientX-r.left)/r.width)*100));c.y=Math.max(8,Math.min(99,((e.clientY-r.top)/r.height)*100));applyPiece(c)});const stop=()=>p._drag=null;p.addEventListener("pointerup",stop);p.addEventListener("pointercancel",stop)}
-function renderList(){list.innerHTML="";$("characterCount").textContent=campaign.characters.length+" character"+(campaign.characters.length===1?"":"s");if(!campaign.characters.length){const d=document.createElement("div");d.className="small";d.textContent="No characters yet.";list.append(d);return}campaign.characters.forEach(c=>{const row=document.createElement("div");row.className="character-row";const img=document.createElement("img");img.src=c.src;img.alt="";const info=document.createElement("button");info.type="button";info.style.textAlign="left";const n=document.createElement("div");n.textContent=c.name;n.style.fontWeight="700";const s=document.createElement("div");s.className="small";s.textContent=c.hidden?"Hidden from players":"Visible";info.append(n,s);info.addEventListener("click",()=>{selectedId=c.id;updateSelection()});const t=document.createElement("button");t.type="button";t.textContent=c.hidden?"Reveal":"Hide";t.addEventListener("click",()=>toggleHidden(c.id));row.append(img,info,t);list.append(row)})}
-function toggleHidden(id){const c=campaign.characters.find(x=>x.id===id);if(!c)return;c.hidden=!c.hidden;applyPiece(c);renderList();updateSelection();status.textContent=c.hidden?`${c.name} fully hidden`:`${c.name} revealed`}
-function renderSceneSelect(){const sel=$("sceneSelect");sel.innerHTML="";campaign.scenes.forEach(s=>{const o=document.createElement("option");o.value=s.id;o.textContent=s.name;sel.append(o)});sel.value=currentScene().id}
-function rebuild(){title.textContent=campaign.name;const s=currentScene();bg.style.backgroundImage=s.background?`url("${s.background}")`:"none";empty.style.display=s.background?"none":"grid";pieces.innerHTML="";campaign.characters.forEach(buildPiece);renderList();renderSceneSelect();updateSelection();zTop=Math.max(10,...campaign.characters.map(c=>Number(c.z)||0))}
-
-$("backgroundFile").addEventListener("change",async e=>{const f=e.target.files?.[0];if(!f)return;const s=currentScene();s.background=await fileToDataURL(f);bg.style.backgroundImage=`url("${s.background}")`;empty.style.display="none";status.textContent=`Background set for “${s.name}”`;e.target.value=""});
-$("characterFiles").addEventListener("change",async e=>{const files=[...(e.target.files||[])].slice(0,30);for(const f of files){const src=await fileToDataURL(f),id=makeId(),i=campaign.characters.length,c={id,name:cleanName(f.name),src,x:45+(i%5)*3,y:86-(i%3)*5,scale:100,base:120,z:++zTop,hidden:false};campaign.characters.push(c);buildPiece(c);selectedId=id}renderList();updateSelection();status.textContent=files.length?`${files.length} character file(s) added`:"No files selected";e.target.value=""});
-$("size").addEventListener("input",e=>{const c=selected();if(!c)return;c.scale=Math.max(40,Math.min(220,Number(e.target.value)||100));applyPiece(c)});
-$("smaller").addEventListener("click",()=>{const c=selected();if(!c)return;c.scale=Math.max(40,c.scale-10);$("size").value=c.scale;applyPiece(c)});
-$("larger").addEventListener("click",()=>{const c=selected();if(!c)return;c.scale=Math.min(220,c.scale+10);$("size").value=c.scale;applyPiece(c)});
-$("hideReveal").addEventListener("click",()=>{const c=selected();if(c)toggleHidden(c.id)});
-$("front").addEventListener("click",()=>{const c=selected();if(!c)return;c.z=++zTop;applyPiece(c)});
-$("back").addEventListener("click",()=>{const c=selected();if(!c)return;c.z=Math.min(0,...campaign.characters.map(x=>x.z))-1;applyPiece(c)});
-$("remove").addEventListener("click",()=>{const c=selected();if(!c)return;campaign.characters=campaign.characters.filter(x=>x.id!==c.id);selectedId=null;rebuild();status.textContent=`${c.name} removed`});
-$("resetPositions").addEventListener("click",()=>{campaign.characters.forEach((c,i)=>{c.x=45+(i%5)*3;c.y=86-(i%3)*5;c.scale=100;c.hidden=false;c.z=10+i});rebuild();status.textContent="Positions reset"});
-
-$("sceneSelect").addEventListener("change",e=>{campaign.currentSceneId=e.target.value;rebuild();status.textContent=`Switched to “${currentScene().name}”`});
-$("newScene").addEventListener("click",()=>{sceneDialogMode="new";$("sceneDialogTitle").textContent="New Scene";$("sceneNameInput").value="";$("sceneDialogConfirm").textContent="Create";$("sceneDialog").showModal()});
-$("renameScene").addEventListener("click",()=>{sceneDialogMode="rename";$("sceneDialogTitle").textContent="Rename Scene";$("sceneNameInput").value=currentScene().name;$("sceneDialogConfirm").textContent="Rename";$("sceneDialog").showModal()});
-$("sceneDialogConfirm").addEventListener("click",e=>{e.preventDefault();const name=$("sceneNameInput").value.trim();if(!name){status.textContent="Scene name cannot be empty";return}if(sceneDialogMode==="new"){const s=freshScene(name);campaign.scenes.push(s);campaign.currentSceneId=s.id;rebuild();status.textContent=`Created scene “${name}”`}else{currentScene().name=name;renderSceneSelect();status.textContent=`Renamed scene to “${name}”`}$("sceneDialog").close()});
-$("deleteScene").addEventListener("click",()=>{const s=currentScene();if(campaign.scenes.length===1){status.textContent="A campaign must keep at least one scene";return}campaign.scenes=campaign.scenes.filter(x=>x.id!==s.id);campaign.currentSceneId=campaign.scenes[0].id;rebuild();status.textContent=`Deleted scene “${s.name}”`});
-
-$("tvMode").addEventListener("click",()=>app.classList.add("tv-mode"));$("tvExit").addEventListener("click",()=>app.classList.remove("tv-mode"));stage.addEventListener("keydown",e=>{if(e.key==="Escape")app.classList.remove("tv-mode")});
-$("newCampaign").addEventListener("click",()=>{$("newName").value="";$("newDialog").showModal()});$("confirmNew").addEventListener("click",e=>{e.preventDefault();campaign=freshCampaign($("newName").value.trim()||"Untitled Campaign");selectedId=null;rebuild();$("newDialog").close();status.textContent="New campaign created"});
-
-const DB_NAME="scene-board-db",STORE="campaigns";
-function dbOpen(){return new Promise((res,rej)=>{const r=indexedDB.open(DB_NAME,1);r.onupgradeneeded=()=>{if(!r.result.objectStoreNames.contains(STORE))r.result.createObjectStore(STORE,{keyPath:"id"})};r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)})}
-async function dbPut(o){const db=await dbOpen();return new Promise((res,rej)=>{const tx=db.transaction(STORE,"readwrite");tx.objectStore(STORE).put(o);tx.oncomplete=()=>res();tx.onerror=()=>rej(tx.error)})}
-async function dbAll(){const db=await dbOpen();return new Promise((res,rej)=>{const r=db.transaction(STORE).objectStore(STORE).getAll();r.onsuccess=()=>res(r.result||[]);r.onerror=()=>rej(r.error)})}
-async function dbGet(id){const db=await dbOpen();return new Promise((res,rej)=>{const r=db.transaction(STORE).objectStore(STORE).get(id);r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)})}
-async function dbDelete(id){const db=await dbOpen();return new Promise((res,rej)=>{const tx=db.transaction(STORE,"readwrite");tx.objectStore(STORE).delete(id);tx.oncomplete=()=>res();tx.onerror=()=>rej(tx.error)})}
-function campaignFile(){campaign.updatedAt=new Date().toISOString();const safe=(campaign.name||"campaign").replace(/[^a-z0-9_-]+/gi,"_"),blob=new Blob([JSON.stringify(campaign)],{type:"application/json"}),file=new File([blob],safe+".scene-board.json",{type:"application/json"});return {safe,blob,file}}
-
-$("saveCampaign").addEventListener("click",async()=>{campaign.updatedAt=new Date().toISOString();try{await dbPut(structuredClone(campaign));status.textContent=`Saved “${campaign.name}” on this device`}catch{status.textContent="Could not save. Browser storage may be unavailable."}});
-$("loadCampaign").addEventListener("click",async()=>{const box=$("savedList");box.innerHTML="";let all=[];try{all=await dbAll()}catch{}all.sort((a,b)=>(b.updatedAt||"").localeCompare(a.updatedAt||""));if(!all.length)box.innerHTML='<div class="small">No saved campaigns on this device yet.</div>';all.forEach(c=>{const row=document.createElement("div");row.className="saved-item";const info=document.createElement("div"),strong=document.createElement("strong"),small=document.createElement("div");strong.textContent=c.name;small.className="small";small.textContent=c.updatedAt?new Date(c.updatedAt).toLocaleString():"";info.append(strong,small);const actions=document.createElement("div");actions.className="row";const load=document.createElement("button");load.type="button";load.textContent="Load";load.addEventListener("click",async()=>{campaign=migrateCampaign(await dbGet(c.id));selectedId=null;rebuild();$("loadDialog").close();status.textContent=`Loaded “${campaign.name}”`});const del=document.createElement("button");del.type="button";del.className="danger";del.textContent="Delete";del.addEventListener("click",async()=>{await dbDelete(c.id);row.remove()});actions.append(load,del);row.append(info,actions);box.append(row)});$("loadDialog").showModal()});
-
-$("shareCampaign").addEventListener("click",async()=>{const {file}=campaignFile();try{if(navigator.canShare&&navigator.canShare({files:[file]})&&navigator.share){await navigator.share({title:campaign.name,text:"Tabletop Scene Board campaign",files:[file]});status.textContent="Campaign shared"}else{status.textContent="Native file sharing is not supported here. Use Export File instead."}}catch(err){status.textContent=err&&err.name==="AbortError"?"Share canceled":"Could not open sharing. Use Export File instead."}});
-$("exportCampaign").addEventListener("click",()=>{const {blob,safe}=campaignFile(),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=safe+".scene-board.json";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);status.textContent="Campaign file exported"});
-$("importFile").addEventListener("change",async e=>{const f=e.target.files?.[0];if(!f)return;try{campaign=migrateCampaign(JSON.parse(await f.text()));selectedId=null;rebuild();status.textContent=`Imported campaign “${campaign.name}”`}catch{status.textContent="That file is not a valid Scene Board campaign"}e.target.value=""});
-
-if("serviceWorker" in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));
-rebuild();
+const id=()=>crypto.randomUUID?crypto.randomUUID():String(Date.now()+Math.random());
+const freshScene=n=>({id:id(),name:n||"Scene 1",background:null,placements:{}});
+const freshCampaign=n=>{const s=freshScene("Scene 1");return{version:4,id:id(),name:n||"Untitled Campaign",scenes:[s],currentSceneId:s.id,characters:[],updatedAt:new Date().toISOString()}};
+let campaign=freshCampaign();
+const scene=()=>campaign.scenes.find(s=>s.id===campaign.currentSceneId)||campaign.scenes[0];
+const character=()=>campaign.characters.find(c=>c.id===selectedId)||null;
+const defaultPlacement=(i=0)=>({x:45+(i%5)*3,y:86-(i%3)*5,scale:100,z:10+i,hidden:false,locked:false});
+function placement(c){const s=scene();if(!s.placements)s.placements={};if(!s.placements[c.id])s.placements[c.id]=defaultPlacement(campaign.characters.indexOf(c));return s.placements[c.id]}
+function migrate(o){if(!o||!Array.isArray(o.characters))throw Error("Invalid");if(!Array.isArray(o.scenes)||!o.scenes.length){const s=freshScene("Scene 1");s.background=o.background||null;o.scenes=[s];o.currentSceneId=s.id}o.scenes=o.scenes.map((s,i)=>({id:s.id||id(),name:s.name||`Scene ${i+1}`,background:s.background||null,placements:s.placements||{}}));o.characters=o.characters.map((c,i)=>{c.id=c.id||id();c.health=c.health||{enabled:false,max:4,current:4,visible:false};if(c.health.max<1)c.health.max=4;c.health.current=Math.max(0,Math.min(c.health.max,c.health.current??c.health.max));return c});if((o.version||0)<4){o.scenes.forEach(s=>o.characters.forEach((c,i)=>{if(!s.placements[c.id])s.placements[c.id]={x:c.x??45+(i%5)*3,y:c.y??86-(i%3)*5,scale:c.scale??100,z:c.z??10+i,hidden:!!c.hidden,locked:false}}))}o.currentSceneId=o.currentSceneId||o.scenes[0].id;o.version=4;o.id=o.id||id();return o}
+const dataURL=f=>new Promise((res,rej)=>{const r=new FileReader;r.onload=()=>res(r.result);r.onerror=rej;r.readAsDataURL(f)});
+const clean=n=>(n||"Character").replace(/\.[^.]+$/,"").replace(/[_-]+/g," ").trim()||"Character";
+function renderBackground(){const b=scene().background;bg.style.backgroundImage="none";bgv.pause();bgv.removeAttribute("src");bgv.style.display="none";empty.style.display=b?"none":"grid";if(!b)return;if(b.type==="video"){bgv.src=b.data;bgv.style.display="block";bgv.load();bgv.play().catch(()=>{status.textContent="Tap the scene once if your browser blocks video autoplay."})}else bg.style.backgroundImage=`url("${b.data}")`}
+stage.addEventListener("pointerup",()=>{if(bgv.style.display==="block"&&bgv.paused)bgv.play().catch(()=>{})});
+function hpMarkup(c){if(!c.health?.enabled||!c.health.visible)return"";let x='<span class="hp-display">';for(let i=0;i<c.health.max;i++)x+=`<span class="hp-seg ${i<c.health.current?"full":""}"></span>`;return x+"</span>"}
+function buildPiece(c){const p=document.createElement("button");p.type="button";p.className="piece";p.dataset.id=c.id;const hp=document.createElement("span");hp.className="hp-wrap";hp.innerHTML=hpMarkup(c);const im=document.createElement("img");im.src=c.src;im.alt=c.name;const lab=document.createElement("span");lab.className="label";lab.textContent=c.name;p.append(hp,im,lab);pieces.append(p);apply(c);p.addEventListener("click",()=>{selectedId=c.id;selection()});p.addEventListener("pointerdown",e=>{const q=placement(c);if(q.hidden||q.locked)return;selectedId=c.id;selection();p.setPointerCapture(e.pointerId);p._r=stage.getBoundingClientRect()});p.addEventListener("pointermove",e=>{if(!p._r)return;const q=placement(c),r=p._r;q.x=Math.max(2,Math.min(98,(e.clientX-r.left)/r.width*100));q.y=Math.max(8,Math.min(99,(e.clientY-r.top)/r.height*100));apply(c)});["pointerup","pointercancel"].forEach(ev=>p.addEventListener(ev,()=>p._r=null))}
+function apply(c){const p=pieces.querySelector(`[data-id="${CSS.escape(c.id)}"]`);if(!p)return;const q=placement(c);p.style.left=q.x+"%";p.style.top=q.y+"%";p.style.transform=`translate(-50%,-100%) scale(${q.scale/100})`;p.style.zIndex=q.z;p.classList.toggle("hidden",q.hidden);p.classList.toggle("locked",q.locked);p.querySelector(".hp-wrap").innerHTML=hpMarkup(c)}
+function selection(){const c=character(),els=["size","smaller","larger","hideReveal","lockPiece","front","back","remove"].map($);els.forEach(e=>e.disabled=!c);pieces.querySelectorAll(".piece").forEach(p=>p.classList.toggle("selected",c&&p.dataset.id===c.id));if(!c){$("selectedName").textContent="No character selected";return}const q=placement(c);$("selectedName").textContent=c.name+(q.hidden?" — hidden":"")+(q.locked?" — locked":"");$("size").value=q.scale;$("hideReveal").textContent=q.hidden?"Reveal":"Hide";$("lockPiece").textContent=q.locked?"Unlock Position":"Lock Position"}
+function renderLists(){list.innerHTML="";healthList.innerHTML="";$("characterCount").textContent=`${campaign.characters.length} character${campaign.characters.length===1?"":"s"}`;if(!campaign.characters.length){list.innerHTML='<div class="small">No characters yet.</div>';healthList.innerHTML='<div class="small">Add a character to configure health.</div>';return}
+campaign.characters.forEach(c=>{const q=placement(c),row=document.createElement("div");row.className="character-row";const im=document.createElement("img");im.src=c.src;const info=document.createElement("button");info.type="button";info.style.textAlign="left";info.innerHTML=`<strong>${c.name.replace(/[<>&]/g,"")}</strong><div class="small">${q.hidden?"Hidden":"Visible"} · ${q.locked?"Locked":"Movable"}</div>`;info.addEventListener("click",()=>{selectedId=c.id;selection()});const t=document.createElement("button");t.textContent=q.hidden?"Reveal":"Hide";t.addEventListener("click",()=>{q.hidden=!q.hidden;apply(c);renderLists();selection()});row.append(im,info,t);list.append(row);
+const h=document.createElement("div");h.className="health-card";const line=document.createElement("div");line.className="health-line";const nm=document.createElement("strong");nm.textContent=c.name;const en=document.createElement("label");en.className="small";const cb=document.createElement("input");cb.type="checkbox";cb.checked=!!c.health.enabled;en.append(cb,document.createTextNode(" Enable health"));line.append(nm,en);h.append(line);
+const ctr=document.createElement("div");ctr.className="health-controls";const preset=document.createElement("select");[["4","D4"],["6","D6"],["8","D8"],["custom","Custom"]].forEach(([v,n])=>{const o=document.createElement("option");o.value=v;o.textContent=n;preset.append(o)});preset.value=[4,6,8].includes(c.health.max)?String(c.health.max):"custom";const max=document.createElement("input");max.type="number";max.min="1";max.max="30";max.value=c.health.max;max.title="Maximum health";const minus=document.createElement("button");minus.textContent="−";const val=document.createElement("strong");val.textContent=`${c.health.current}/${c.health.max}`;const plus=document.createElement("button");plus.textContent="+";const vis=document.createElement("button");vis.textContent=c.health.visible?"Hide from Players":"Show to Players";ctr.append(preset,max,minus,val,plus,vis);h.append(ctr);healthList.append(h);
+const sync=()=>{c.health.max=Math.max(1,Math.min(30,Number(max.value)||4));c.health.current=Math.min(c.health.current,c.health.max);val.textContent=`${c.health.current}/${c.health.max}`;apply(c)};
+cb.addEventListener("change",()=>{c.health.enabled=cb.checked;if(c.health.enabled&&c.health.current>c.health.max)c.health.current=c.health.max;apply(c);renderLists()});preset.addEventListener("change",()=>{if(preset.value!=="custom"){max.value=preset.value;c.health.max=Number(preset.value);c.health.current=c.health.max;sync()}else max.focus()});max.addEventListener("change",sync);minus.addEventListener("click",()=>{c.health.current=Math.max(0,c.health.current-1);sync()});plus.addEventListener("click",()=>{c.health.current=Math.min(c.health.max,c.health.current+1);sync()});vis.addEventListener("click",()=>{c.health.visible=!c.health.visible;apply(c);renderLists()})
+})}
+function sceneSelect(){const s=$("sceneSelect");s.innerHTML="";campaign.scenes.forEach(x=>{const o=document.createElement("option");o.value=x.id;o.textContent=x.name;s.append(o)});s.value=scene().id}
+function rebuild(){ $("campaignTitle").textContent=campaign.name;renderBackground();pieces.innerHTML="";campaign.characters.forEach(buildPiece);sceneSelect();renderLists();selection();zTop=Math.max(10,...Object.values(scene().placements||{}).map(p=>p.z||0))}
+$("backgroundFile").addEventListener("change",async e=>{const f=e.target.files?.[0];if(!f)return;if(f.size>20*1024*1024&&!confirm("This background is over 20 MB and may make campaign files slow to save/share. Use it anyway?")){e.target.value="";return}scene().background={type:f.type.startsWith("video/")?"video":"image",mime:f.type,data:await dataURL(f),name:f.name};renderBackground();status.textContent=f.type.startsWith("video/")?"Looping video background set":"Image/GIF background set";e.target.value=""});
+$("characterFiles").addEventListener("change",async e=>{for(const f of [...(e.target.files||[])]){const c={id:id(),name:clean(f.name),src:await dataURL(f),health:{enabled:false,max:4,current:4,visible:false}};campaign.characters.push(c);campaign.scenes.forEach((s,i)=>s.placements[c.id]=defaultPlacement(campaign.characters.length-1));selectedId=c.id}rebuild();e.target.value=""});
+$("size").addEventListener("input",e=>{const c=character();if(c){placement(c).scale=Number(e.target.value);apply(c)}});$("smaller").onclick=()=>{const c=character();if(c){placement(c).scale=Math.max(40,placement(c).scale-10);rebuild()}};$("larger").onclick=()=>{const c=character();if(c){placement(c).scale=Math.min(220,placement(c).scale+10);rebuild()}};$("hideReveal").onclick=()=>{const c=character();if(c){placement(c).hidden=!placement(c).hidden;rebuild()}};$("lockPiece").onclick=()=>{const c=character();if(c){placement(c).locked=!placement(c).locked;rebuild()}};$("front").onclick=()=>{const c=character();if(c){placement(c).z=++zTop;apply(c)}};$("back").onclick=()=>{const c=character();if(c){placement(c).z=Math.min(0,...Object.values(scene().placements).map(p=>p.z||0))-1;apply(c)}};$("remove").onclick=()=>{const c=character();if(!c)return;campaign.characters=campaign.characters.filter(x=>x.id!==c.id);campaign.scenes.forEach(s=>delete s.placements[c.id]);selectedId=null;rebuild()};
+$("resetPositions").onclick=()=>{campaign.characters.forEach((c,i)=>scene().placements[c.id]=defaultPlacement(i));rebuild();status.textContent="Current scene positions reset"};
+$("hideAllHealth").onclick=()=>{campaign.characters.forEach(c=>c.health.visible=false);rebuild();status.textContent="All player health displays hidden"};
+$("sceneSelect").onchange=e=>{campaign.currentSceneId=e.target.value;selectedId=null;rebuild()};$("newScene").onclick=()=>{sceneDialogMode="new";$("sceneDialogTitle").textContent="New Scene";$("sceneNameInput").value="";$("sceneDialog").showModal()};$("renameScene").onclick=()=>{sceneDialogMode="rename";$("sceneDialogTitle").textContent="Rename Scene";$("sceneNameInput").value=scene().name;$("sceneDialog").showModal()};$("duplicateScene").onclick=()=>{const old=scene(),copy={id:id(),name:old.name+" Copy",background:old.background?structuredClone(old.background):null,placements:structuredClone(old.placements||{})};campaign.scenes.push(copy);campaign.currentSceneId=copy.id;rebuild();status.textContent="Scene duplicated"};$("deleteScene").onclick=()=>{if(campaign.scenes.length===1){status.textContent="A campaign must keep one scene";return}const old=scene();campaign.scenes=campaign.scenes.filter(s=>s.id!==old.id);campaign.currentSceneId=campaign.scenes[0].id;rebuild()};
+$("sceneDialogConfirm").onclick=e=>{e.preventDefault();const n=$("sceneNameInput").value.trim();if(!n)return;if(sceneDialogMode==="new"){const s=freshScene(n);campaign.characters.forEach((c,i)=>s.placements[c.id]=defaultPlacement(i));campaign.scenes.push(s);campaign.currentSceneId=s.id}else scene().name=n;$("sceneDialog").close();rebuild()};
+$("tvMode").onclick=()=>app.classList.add("tv-mode");$("tvExit").onclick=()=>app.classList.remove("tv-mode");
+$("newCampaign").onclick=()=>{$("newDialog").showModal()};$("confirmNew").onclick=e=>{e.preventDefault();campaign=freshCampaign($("newName").value.trim()||"Untitled Campaign");selectedId=null;$("newDialog").close();rebuild()};
+const DB="scene-board-db",STORE="campaigns";function db(){return new Promise((res,rej)=>{const r=indexedDB.open(DB,1);r.onupgradeneeded=()=>{if(!r.result.objectStoreNames.contains(STORE))r.result.createObjectStore(STORE,{keyPath:"id"})};r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)})}async function put(o){const d=await db();return new Promise((res,rej)=>{const t=d.transaction(STORE,"readwrite");t.objectStore(STORE).put(o);t.oncomplete=res;t.onerror=()=>rej(t.error)})}async function all(){const d=await db();return new Promise((res,rej)=>{const r=d.transaction(STORE).objectStore(STORE).getAll();r.onsuccess=()=>res(r.result||[]);r.onerror=()=>rej(r.error)})}async function get(k){const d=await db();return new Promise((res,rej)=>{const r=d.transaction(STORE).objectStore(STORE).get(k);r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)})}
+$("saveCampaign").onclick=async()=>{campaign.updatedAt=new Date().toISOString();try{await put(structuredClone(campaign));status.textContent="Campaign saved"}catch{status.textContent="Save failed. Large video files can exceed browser storage."}};
+$("loadCampaign").onclick=async()=>{const box=$("savedList");box.innerHTML="";const a=await all();if(!a.length)box.innerHTML='<div class="small">No saved campaigns.</div>';a.forEach(c=>{const b=document.createElement("button");b.type="button";b.textContent=c.name;b.onclick=async()=>{campaign=migrate(await get(c.id));selectedId=null;$("loadDialog").close();rebuild()};box.append(b)});$("loadDialog").showModal()};
+function campFile(){campaign.updatedAt=new Date().toISOString();const safe=(campaign.name||"campaign").replace(/[^a-z0-9_-]+/gi,"_"),blob=new Blob([JSON.stringify(campaign)],{type:"application/json"}),file=new File([blob],safe+".scene-board.json",{type:"application/json"});return{safe,blob,file}}
+$("shareCampaign").onclick=async()=>{const {file}=campFile();try{if(navigator.canShare?.({files:[file]})){await navigator.share({title:campaign.name,files:[file],text:"Tabletop Scene Board campaign"})}else status.textContent="Use Export File on this browser."}catch(e){if(e.name!=="AbortError")status.textContent="Share failed; use Export File."}};
+$("exportCampaign").onclick=()=>{const{safe,blob}=campFile(),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=safe+".scene-board.json";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)};
+$("importFile").onchange=async e=>{try{campaign=migrate(JSON.parse(await e.target.files[0].text()));selectedId=null;rebuild();status.textContent="Campaign imported"}catch{status.textContent="Invalid campaign file"}e.target.value=""};
+if("serviceWorker"in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));rebuild();
 })();
-</script>
-</body>
-</html>
+</script></body></html>
