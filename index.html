@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#1f2d25">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>Tabletop Scene Board v6.9</title>
+<title>Tabletop Scene Board v6.9.1</title>
 <meta name="scene-board-build" content="6.6.5">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png" type="image/png">
@@ -67,8 +67,14 @@ button:hover{border-color:var(--accent)}button.primary{background:linear-gradien
 .link-pill{border:1px solid #5f5138;border-radius:999px;padding:6px 9px;font-size:11px;white-space:nowrap;color:#cbb98c;background:#15120d}
 .link-pill.connected{border-color:#7e6a3d;color:#f1d88d;box-shadow:0 0 0 1px #c2a35b30 inset}
 .player-display .topbar,.player-display .quickbar,.player-display .character-strip,.player-display .v6-shell,.player-display .setup-banner,.player-display .bottom-nav,.player-display .stage-help{display:none!important}
-.player-display .app{padding:0;max-width:none}.player-display .stage-wrap{margin:0}.player-display .stage{border:0;border-radius:0;width:100vw;height:100vh;aspect-ratio:auto}
-.player-display .piece{border-color:transparent!important;pointer-events:none}.player-display .piece .label{display:none}
+.player-display .app{padding:0;max-width:none}
+.player-display .stage-wrap{position:fixed;inset:0;margin:0;background:#050505;overflow:hidden}
+.stage-mirror-scale{display:block;width:100%}
+.player-display .stage-mirror-scale{display:block;position:absolute;left:50%;top:50%;width:var(--player-stage-width,1280px);height:var(--player-stage-height,720px);transform:translate(-50%,-50%) scale(var(--player-stage-scale,1));transform-origin:center center}
+.player-display .stage{border:0;border-radius:0;width:100%;height:100%;aspect-ratio:auto}
+.player-display .piece{width:var(--player-piece-width,120px);border-color:transparent!important;pointer-events:none}
+.player-display .piece img{max-height:var(--player-piece-max-height,70vh)}
+.player-display .piece .label{display:block}
 .player-display-exit{display:none;position:fixed;right:8px;bottom:8px;z-index:1200;opacity:.35;background:#000a}
 .player-display .player-display-exit{display:block}
 .pair-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
@@ -485,7 +491,7 @@ body.tv-mode .save-toast,
 </div>
 
 <div class="topbar filebar">
- <div class="grow"><div class="small">Campaign · Scene Board v6.9</div><div id="campaignTitle" class="campaign-name">Untitled Campaign</div></div>
+ <div class="grow"><div class="small">Campaign · Scene Board v6.9.1</div><div id="campaignTitle" class="campaign-name">Untitled Campaign</div></div>
  <span id="modePill" class="mode-pill">🎲 GM Mode</span><span id="displayLinkPill" class="link-pill">📺 Local Display: Off</span><button id="modeToggle" class="primary">Session Setup</button><button id="newCampaign" class="setup-only">New</button><button id="saveCampaign">Save</button><button id="loadCampaign" class="setup-only">Load</button><button id="shareCampaign" class="setup-only">Share Campaign</button><button id="exportCampaign" class="setup-only">Export File</button>
  <label class="filebtn setup-only"><button type="button">Import Campaign</button><input id="importFile" type="file" accept=".json,application/json"></label><button id="tvMode">TV View</button>
 </div>
@@ -506,7 +512,7 @@ body.tv-mode .save-toast,
  <button id="quickDisplay">📺 Display</button><button id="quickTv">TV</button>
 </div>
 <div id="characterStrip" class="character-strip gm-only-hide"></div>
-<div class="stage-wrap"><div id="stage" class="stage" tabindex="0"><div id="background" class="background"></div><video id="backgroundVideo" class="background-video" muted loop playsinline preload="auto"></video><div id="empty" class="empty"><div><strong>No scene background</strong><br>Add an image, GIF, MP4, or WebM.</div></div><div id="pieces"></div><div id="foreground" class="foreground"></div><video id="foregroundVideo" class="foreground-video" muted loop playsinline preload="auto"></video><div id="turnBadge" class="turn-badge"></div><div id="fadeOverlay" class="fade-overlay"></div><button id="tvExit" class="tv-exit">Exit TV View</button></div></div>
+<div class="stage-wrap"><div id="stageMirrorScale" class="stage-mirror-scale"><div id="stage" class="stage" tabindex="0"><div id="background" class="background"></div><video id="backgroundVideo" class="background-video" muted loop playsinline preload="auto"></video><div id="empty" class="empty"><div><strong>No scene background</strong><br>Add an image, GIF, MP4, or WebM.</div></div><div id="pieces"></div><div id="foreground" class="foreground"></div><video id="foregroundVideo" class="foreground-video" muted loop playsinline preload="auto"></video><div id="turnBadge" class="turn-badge"></div><div id="fadeOverlay" class="fade-overlay"></div><button id="tvExit" class="tv-exit">Exit TV View</button></div></div></div>
 <div class="v6-shell">
 <div class="v6-main">
  <details id="sceneTools" class="accordion setup-only" open><summary>Scene Setup & Quick Character Controls</summary><div class="accordion-body"><section class="panel stack">
@@ -695,11 +701,11 @@ body.tv-mode .save-toast,
 
     <div class="developer-version-block">
       <span class="developer-version-label">Current Version</span>
-      <strong class="developer-version">v6.9</strong>
+      <strong class="developer-version">v6.9.1</strong>
     </div>
 
     <div class="developer-section">
-      <h3>Build Notes</h3><p><strong>V6.9</strong> replaces manual Player Display offer/answer copying with short-code Cloudflare signaling, direct WebRTC pairing, chunked scene sync, and explicit Player Display Ready acknowledgement.</p><p><strong>V6.8.1</strong> replaces the generic save spinner with a brass line-art D20 animation styled to match the Scene Board UI.</p><p><strong>V6.7</strong> adds shared character position/size across scenes plus Lock All and Unlock All controls for setup.</p>
+      <h3>Build Notes</h3><p><strong>V6.9.1</strong> makes Player Display mirror the GM scene canvas exactly: the same 16:9 stage geometry, character size/position, health placement, labels, background framing, foreground framing, and layers are scaled as one composition to fit the receiving screen.</p><p><strong>V6.9</strong> replaces manual Player Display offer/answer copying with short-code Cloudflare signaling, direct WebRTC pairing, chunked scene sync, and explicit Player Display Ready acknowledgement.</p><p><strong>V6.8.1</strong> replaces the generic save spinner with a brass line-art D20 animation styled to match the Scene Board UI.</p><p><strong>V6.7</strong> adds shared character position/size across scenes plus Lock All and Unlock All controls for setup.</p>
       <div class="developer-build-notes">
         <p><strong>V6.6.4</strong> replaces the Developer Info native dialog with a custom overlay for more reliable opening across devices.</p>
         <p>This build includes all cumulative V6.x features and fixes through V6.6.</p>
@@ -1147,13 +1153,44 @@ rebuild=function(){
   syncCampaignMenu?.();
 }
 
-// ---- V6.9 Player Display: short-code Cloudflare signaling + direct WebRTC ----
+// ---- V6.9.1 Player Display: short-code signaling + mirrored GM scene canvas ----
 const PAIRING_HTTP="https://scene-board-pairing.eufaulalocalgaminggroup.workers.dev";
 const PAIRING_WS="wss://scene-board-pairing.eufaulalocalgaminggroup.workers.dev";
 let localPeer=null,localChannel=null,localRole=null,playerDisplayArmed=false;
 let signalingSocket=null,currentPairCode="",hostToken="",pendingIce=[];
 let rxChunks=new Map(),txSeq=0,localSyncTimer=null,txQueue=Promise.resolve();
 let lastFullSignature="",playerReady=false;
+let playerStageMetrics=null;
+
+function getStageMetrics(){
+  const sample=pieces.querySelector(".piece");
+  const sampleImg=sample?.querySelector("img");
+  const pieceWidth=sample?parseFloat(getComputedStyle(sample).width):(window.innerWidth<=800?95:120);
+  const maxHeightRaw=sampleImg?getComputedStyle(sampleImg).maxHeight:"";
+  const maxHeight=parseFloat(maxHeightRaw);
+  return {
+    width:Math.max(1,stage.offsetWidth||1280),
+    height:Math.max(1,stage.offsetHeight||720),
+    pieceWidth:Number.isFinite(pieceWidth)?pieceWidth:120,
+    pieceMaxHeight:Number.isFinite(maxHeight)?maxHeight:null
+  };
+}
+function fitPlayerStage(){
+  if(localRole!=="player"||!app.classList.contains("player-display")||!playerStageMetrics)return;
+  const m=playerStageMetrics,w=Math.max(1,Number(m.width)||1280),h=Math.max(1,Number(m.height)||720);
+  const scale=Math.min(window.innerWidth/w,window.innerHeight/h);
+  app.style.setProperty("--player-stage-width",`${w}px`);
+  app.style.setProperty("--player-stage-height",`${h}px`);
+  app.style.setProperty("--player-stage-scale",String(Math.max(.01,scale)));
+  app.style.setProperty("--player-piece-width",`${Math.max(1,Number(m.pieceWidth)||120)}px`);
+  if(Number.isFinite(Number(m.pieceMaxHeight)))app.style.setProperty("--player-piece-max-height",`${Number(m.pieceMaxHeight)}px`);
+  else app.style.removeProperty("--player-piece-max-height");
+}
+function applyPlayerStageMetrics(metrics){
+  if(!metrics)return;
+  playerStageMetrics={...metrics};
+  requestAnimationFrame(fitPlayerStage);
+}
 
 function setDisplayStatus(text,connected=false,ready=false){
   if($("displayStatus"))$("displayStatus").textContent=text;
@@ -1255,7 +1292,7 @@ function sendFullPlayerSync(){
   lastFullSignature=playerFullSignature();
   setDisplayStatus("Player connected. Sending scene…",true,false);
   setDisplayStage("Connected → Receiving scene…");
-  sendChunked("initial-display-state",{campaign:buildPlayerCampaign()});
+  sendChunked("initial-display-state",{campaign:buildPlayerCampaign(),stageMetrics:getStageMetrics()});
 }
 function lightweightState(){
   const s=scene(),visible=currentVisibleCharacters(),ids=new Set(visible.map(c=>c.id));
@@ -1264,7 +1301,8 @@ function lightweightState(){
     scene:{id:s.id,name:s.name,backgroundView:s.backgroundView,foregroundView:s.foregroundView,placements:Object.fromEntries(Object.entries(s.placements||{}).filter(([cid])=>ids.has(cid)))},
     characters:visible.map(c=>({id:c.id,name:c.name,group:c.group,conditions:c.conditions,conditionsVisible:c.conditionsVisible,health:c.health})),
     turnTracker:{...structuredClone(campaign.turnTracker),order:(campaign.turnTracker?.order||[]).filter(cid=>ids.has(cid))},
-    transition:campaign.transition,transitionDuration:campaign.transitionDuration??0.8,healthDisplayStyle:campaign.healthDisplayStyle||"bars"
+    transition:campaign.transition,transitionDuration:campaign.transitionDuration??0.8,healthDisplayStyle:campaign.healthDisplayStyle||"bars",
+    stageMetrics:getStageMetrics()
   };
 }
 function sendPlayerState(){
@@ -1314,7 +1352,7 @@ function receiveLocalMessage(data){
   if(m.kind==="initial-display-state"||m.kind==="full"){
     try{
       setDisplayStatus("Receiving scene…",true,false);setDisplayStage("Connected → Receiving scene…");
-      campaign=migrate(m.payload.campaign);selectedId=null;playerDisplayArmed=true;app.classList.add("player-display");app.classList.remove("tv-mode");rebuild();
+      campaign=migrate(m.payload.campaign);selectedId=null;playerDisplayArmed=true;app.classList.add("player-display");app.classList.remove("tv-mode");applyPlayerStageMetrics(m.payload.stageMetrics);rebuild();fitPlayerStage();
       $("displayDialog")?.close();
       markPlayerSceneReady();
     }catch(err){
@@ -1328,7 +1366,7 @@ function receiveLocalMessage(data){
     const incomingIds=new Set(s.characters.map(c=>c.id));
     campaign.characters=campaign.characters.filter(c=>incomingIds.has(c.id));
     s.characters.forEach(inC=>{const c=campaign.characters.find(x=>x.id===inC.id);if(c){c.name=inC.name;c.group=inC.group;c.conditions=inC.conditions;c.conditionsVisible=inC.conditionsVisible;c.health=inC.health}});
-    campaign.turnTracker=s.turnTracker;campaign.transition=s.transition;campaign.transitionDuration=s.transitionDuration??0.8;campaign.healthDisplayStyle=s.healthDisplayStyle||"bars";rebuild();
+    campaign.turnTracker=s.turnTracker;campaign.transition=s.transition;campaign.transitionDuration=s.transitionDuration??0.8;campaign.healthDisplayStyle=s.healthDisplayStyle||"bars";applyPlayerStageMetrics(s.stageMetrics);rebuild();fitPlayerStage();
   }
 }
 async function handleSignalMessage(evt){
@@ -1390,7 +1428,7 @@ async function joinDisplay(){
 function disconnectLocal(resetUi=true){
   try{localChannel?.close()}catch{}try{localPeer?.close()}catch{}try{signalingSocket?.close()}catch{}
   localChannel=null;localPeer=null;signalingSocket=null;localRole=null;playerDisplayArmed=false;playerReady=false;pendingIce=[];rxChunks.clear();lastFullSignature="";currentPairCode="";hostToken="";
-  app.classList.remove("player-display");
+  app.classList.remove("player-display");playerStageMetrics=null;["--player-stage-width","--player-stage-height","--player-stage-scale","--player-piece-width","--player-piece-max-height"].forEach(k=>app.style.removeProperty(k));
   if(resetUi){$("pairingCodeDisplay").textContent="----";$("gmPairStatus").textContent="Not hosting.";$("playerPairStatus").textContent="Not joined.";setDisplayStatus("Not connected.",false,false);setDisplayStage("")}
 }
 $("quickDisplay").onclick=()=>$("displayDialog").showModal();
@@ -1603,7 +1641,8 @@ $("clearDeveloperNotes")?.addEventListener("click",()=>{
   if(developerNoteSaved)developerNoteSaved.textContent="Notes cleared.";
 });
 
-if("serviceWorker"in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js?v=6.9").catch(()=>{}));rebuild();
+window.addEventListener("resize",()=>{if(localRole==="gm")sendPlayerState?.();if(localRole==="player")fitPlayerStage?.()});
+if("serviceWorker"in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js?v=6.9.1").catch(()=>{}));rebuild();
 })();
 </script>
 

@@ -1,4 +1,4 @@
-Scene Board v6.9 — Player Display Rework
+Scene Board v6.9.1 — Player Display Rework
 
 What changed:
 - Short-code Player Display pairing through the Scene Board Cloudflare signaling service.
