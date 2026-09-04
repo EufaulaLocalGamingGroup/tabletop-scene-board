@@ -1,17 +1,15 @@
-TABLETOP SCENE BOARD V6.6.5 — REMOVE CHARACTER IMPROVEMENT
+TABLETOP SCENE BOARD V6.8.1 — THEMED D20 SAVE ANIMATION
 
-NEW
-- Added a clear “🗑 Remove Character” button inside Selected Character Tools.
-- Existing Remove button remains available in the quick controls.
-- Both use the same confirmation prompt.
-- Removing a character deletes it from:
-  - campaign roster
-  - every scene placement
-  - turn tracker
-- Player Display resyncs after removal.
+CHANGED
+- Replaced the generic circular save spinner with an animated D20.
+- Uses the same clean line-art visual language as the Scene Board Campaign Menu D20.
+- Brass/gold lines match the UI accent.
+- The center face displays “20”.
+- The die rocks/rolls while saving rather than using a generic loading ring.
+- A subtle circular brass pulse behind it adds movement without making the UI flashy.
+- Existing “Saving campaign…” message and successful/failed save confirmations are unchanged.
 
-Hide vs Remove
-- Hide keeps the character available for later reveal.
-- Remove deletes the character from the active campaign.
+CUMULATIVE
+Includes all previous V6.x features and V6.8 save feedback.
 
-Cumulative with all previous V6.x features and fixes.
+Confirm the header says “Campaign · Scene Board v6.8.1”.

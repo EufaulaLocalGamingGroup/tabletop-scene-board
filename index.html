@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#1f2d25">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>Tabletop Scene Board v6.6.5</title>
+<title>Tabletop Scene Board v6.8.1</title>
 <meta name="scene-board-build" content="6.6.5">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png" type="image/png">
@@ -309,13 +309,182 @@ button:hover{border-color:var(--accent)}button.primary{background:linear-gradien
 
 .remove-character-row{margin-top:10px;padding-top:10px;border-top:1px solid #4a3827}
 #removeCharacterDetails{width:100%;font-weight:800}
+
+/* V6.7 shared character placement setup */
+.shared-placement-card{
+  border-color:#725d36;
+  background:linear-gradient(180deg,#201a12,#17130f);
+}
+.shared-placement-toggle{
+  display:flex;
+  gap:10px;
+  align-items:flex-start;
+  padding:10px;
+  border:1px solid #55452b;
+  border-radius:10px;
+  background:#120f0c;
+}
+.shared-placement-toggle input{
+  width:20px;
+  height:20px;
+  margin-top:2px;
+  accent-color:#c2a35b;
+  flex:0 0 auto;
+}
+.shared-placement-toggle span{
+  display:grid;
+  gap:4px;
+}
+.shared-placement-toggle small{
+  color:var(--muted);
+  line-height:1.35;
+}
+
+
+/* V6.8 save progress + confirmation */
+.save-overlay{
+  position:fixed;
+  inset:0;
+  z-index:12000;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  background:#050403a8;
+  backdrop-filter:blur(3px);
+}
+.save-overlay.open{display:flex}
+.save-overlay-card{
+  min-width:min(340px,90vw);
+  max-width:440px;
+  display:grid;
+  justify-items:center;
+  gap:10px;
+  padding:22px 24px;
+  border:1px solid #765f36;
+  border-radius:16px;
+  background:#17130f;
+  box-shadow:0 24px 70px #000b;
+  text-align:center;
+}
+.save-d20-wrap{
+  position:relative;
+  width:58px;
+  height:58px;
+  display:grid;
+  place-items:center;
+}
+.save-d20{
+  width:54px;
+  height:54px;
+  overflow:visible;
+  fill:none;
+  stroke:#c2a35b;
+  stroke-width:4.2;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+  filter:drop-shadow(0 0 7px #c2a35b55);
+  animation:sceneBoardD20Roll 1.15s cubic-bezier(.55,.05,.45,.95) infinite;
+  transform-origin:50% 50%;
+}
+.save-d20 text{
+  fill:#d7bd79;
+  stroke:none;
+  font:800 19px Georgia,serif;
+  letter-spacing:-1px;
+}
+.save-d20-rune{
+  position:absolute;
+  inset:3px;
+  border:1px solid #7a633a66;
+  border-radius:50%;
+  animation:sceneBoardRunePulse 1.15s ease-in-out infinite;
+}
+@keyframes sceneBoardD20Roll{
+  0%{transform:rotate(-8deg) scale(.92)}
+  35%{transform:rotate(16deg) scale(1.04)}
+  68%{transform:rotate(-12deg) scale(.97)}
+  100%{transform:rotate(352deg) scale(.92)}
+}
+@keyframes sceneBoardRunePulse{
+  0%,100%{opacity:.18;transform:scale(.82)}
+  50%{opacity:.72;transform:scale(1.06)}
+}
+.save-toast{
+  position:fixed;
+  left:50%;
+  bottom:24px;
+  z-index:12010;
+  transform:translate(-50%,18px);
+  opacity:0;
+  pointer-events:none;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  min-width:min(320px,calc(100vw - 28px));
+  max-width:520px;
+  padding:12px 16px;
+  border:1px solid #765f36;
+  border-radius:14px;
+  background:#17130f;
+  box-shadow:0 16px 45px #000b;
+  transition:opacity .2s ease,transform .2s ease;
+}
+.save-toast.show{opacity:1;transform:translate(-50%,0)}
+.save-toast.error{border-color:#7b2638}
+.save-toast-icon{
+  display:grid;
+  place-items:center;
+  width:28px;
+  height:28px;
+  flex:0 0 auto;
+  border-radius:50%;
+  border:1px solid #c2a35b;
+  color:#e4c978;
+  font-weight:900;
+}
+.save-toast.error .save-toast-icon{
+  border-color:#a84658;
+  color:#d97687;
+}
+.save-toast span:last-child{display:grid;gap:2px}
+.save-toast small{color:var(--muted)}
+body.tv-mode .save-overlay,
+body.tv-mode .save-toast,
+.player-display .save-overlay,
+.player-display .save-toast{display:none!important}
+
 </style>
 
 </head>
 <body>
 <div class="app" id="app">
+<div id="saveOverlay" class="save-overlay" aria-hidden="true">
+  <div class="save-overlay-card" role="status" aria-live="polite">
+    <div class="save-d20-wrap" aria-hidden="true">
+  <svg class="save-d20" viewBox="0 0 100 100" role="presentation">
+    <path d="M50 5 L88 28 L91 70 L50 95 L9 70 L12 28 Z"/>
+    <path d="M50 5 L50 31 M12 28 L50 31 L88 28 M12 28 L25 70 L9 70 M88 28 L75 70 L91 70 M25 70 L50 95 L75 70"/>
+    <path d="M50 31 L25 70 L75 70 Z"/>
+    <path d="M12 28 L25 70 M88 28 L75 70"/>
+    <text x="50" y="60" text-anchor="middle">20</text>
+  </svg>
+  <span class="save-d20-rune"></span>
+</div>
+    <strong>Saving campaign…</strong>
+    <span class="small">Please keep Scene Board open until this finishes.</span>
+  </div>
+</div>
+<div id="saveToast" class="save-toast" role="status" aria-live="polite">
+  <span class="save-toast-icon">✓</span>
+  <span>
+    <strong>Campaign saved</strong>
+    <small id="saveToastDetail">Saved on this device.</small>
+  </span>
+</div>
+
 <div class="topbar filebar">
- <div class="grow"><div class="small">Campaign · Scene Board v6.6.5</div><div id="campaignTitle" class="campaign-name">Untitled Campaign</div></div>
+ <div class="grow"><div class="small">Campaign · Scene Board v6.8.1</div><div id="campaignTitle" class="campaign-name">Untitled Campaign</div></div>
  <span id="modePill" class="mode-pill">🎲 GM Mode</span><span id="displayLinkPill" class="link-pill">📺 Local Display: Off</span><button id="modeToggle" class="primary">Session Setup</button><button id="newCampaign" class="setup-only">New</button><button id="saveCampaign">Save</button><button id="loadCampaign" class="setup-only">Load</button><button id="shareCampaign" class="setup-only">Share Campaign</button><button id="exportCampaign" class="setup-only">Export File</button>
  <label class="filebtn setup-only"><button type="button">Import Campaign</button><input id="importFile" type="file" accept=".json,application/json"></label><button id="tvMode">TV View</button>
 </div>
@@ -343,7 +512,7 @@ button:hover{border-color:var(--accent)}button.primary{background:linear-gradien
  <div class="row"><label class="filebtn"><button type="button">Set Background / Video</button><input id="backgroundFile" type="file" accept="image/*,video/mp4,video/webm,video/*"></label><label class="filebtn"><button type="button">Set Foreground</button><input id="foregroundFile" type="file" accept="image/*,video/mp4,video/webm,video/*"></label><button id="clearForeground" type="button">Clear Foreground</button><label class="filebtn"><button type="button">Add Character</button><input id="characterFiles" type="file" accept="image/*" multiple></label><button id="resetPositions">Reset Scene Positions</button></div>
  <div><strong id="selectedName">No character selected</strong><div id="status" class="small" aria-live="polite">Ready</div></div>
  <div class="row"><button id="smaller" disabled>−</button><input id="size" type="range" min="40" max="220" value="100" disabled><button id="larger" disabled>+</button><button id="hideReveal" disabled>Hide</button><button id="lockPiece" disabled>Lock Position</button><button id="front" disabled>Bring Forward</button><button id="back" disabled>Send Back</button><button id="remove" class="danger" disabled>Remove</button></div>
- <div class="small stage-help">Each scene remembers character position, scale, visibility, layer, and lock state independently. GIFs animate normally; videos autoplay muted and loop.</div>
+ <div class="small stage-help">By default, each scene remembers character position, scale, visibility, layer, and lock state independently. In Setup → Characters, you can optionally keep every character’s position and size matched across all scenes.</div>
 </section></div></details>
  <details id="sceneAdjust" class="accordion setup-only"><summary>Adjust Background & Foreground</summary><div class="accordion-body">
 <section class="tool-card"><strong>Scene Tools</strong><div class="small">Reusable backgrounds, framing, scene notes, and presentation settings.</div><div class="row"><button id="saveBgLibrary">Save Background to Library</button><select id="bgLibrary" class="compact-select"><option value="">Background Library</option></select><button id="applyBgLibrary">Apply</button><button id="deleteBgLibrary">Delete</button></div>
@@ -385,7 +554,20 @@ button:hover{border-color:var(--accent)}button.primary{background:linear-gradien
 </div>
 <div class="small">Lock it after positioning so it cannot be changed accidentally.</div></section>
 </div></details>
- <details id="characterTools" class="accordion mobile-panel" open><summary>Characters</summary><div class="accordion-body"><aside class="panel stack"><div class="row" style="justify-content:space-between"><strong>GM Character List</strong><span id="characterCount" class="small"></span></div><div id="characterList" class="stack"></div></aside><section class="tool-card"><strong>Selected Character Tools</strong><div id="characterToolEmpty" class="small">Select a character to edit its group, conditions, and GM notes.</div><div id="characterToolBody" class="stack" style="display:none"><label>Group<select id="characterGroup" class="compact-select"><option>Player</option><option>NPC</option><option>Enemy</option><option>Other</option></select></label><div class="row"><input id="conditionInput" class="grow" type="text" maxlength="30" placeholder="Add condition (Scared, Hurt...)"/><button id="addCondition">Add</button></div><label class="small"><input id="conditionsVisible" type="checkbox"> Show conditions to players</label><div id="conditionList" class="condition-list"></div><label class="gm-notebook">GM Character Notes<textarea id="characterNotes" class="notes" placeholder="Motives, clues, secrets, reminders..."></textarea></label><div class="remove-character-row"><button id="removeCharacterDetails" type="button" class="danger">🗑 Remove Character</button></div></div></section></div></details>
+ <details id="characterTools" class="accordion mobile-panel" open><summary>Characters</summary><div class="accordion-body">
+<section class="tool-card shared-placement-card">
+  <strong>Character Placement Setup</strong>
+  <label class="shared-placement-toggle">
+    <input id="syncAllCharacterPlacement" type="checkbox">
+    <span><b>Keep every character’s size &amp; location the same in every scene</b><small>When checked, moving or resizing a character in one scene updates that character’s position and size in all scenes. Visibility and layer order stay scene-specific.</small></span>
+  </label>
+  <div class="row">
+    <button id="lockAllCharacters" type="button">🔒 Lock All Characters</button>
+    <button id="unlockAllCharacters" type="button">🔓 Unlock All Characters</button>
+  </div>
+  <div class="small">Lock All / Unlock All applies to every character in every scene.</div>
+</section>
+<aside class="panel stack"><div class="row" style="justify-content:space-between"><strong>GM Character List</strong><span id="characterCount" class="small"></span></div><div id="characterList" class="stack"></div></aside><section class="tool-card"><strong>Selected Character Tools</strong><div id="characterToolEmpty" class="small">Select a character to edit its group, conditions, and GM notes.</div><div id="characterToolBody" class="stack" style="display:none"><label>Group<select id="characterGroup" class="compact-select"><option>Player</option><option>NPC</option><option>Enemy</option><option>Other</option></select></label><div class="row"><input id="conditionInput" class="grow" type="text" maxlength="30" placeholder="Add condition (Scared, Hurt...)"/><button id="addCondition">Add</button></div><label class="small"><input id="conditionsVisible" type="checkbox"> Show conditions to players</label><div id="conditionList" class="condition-list"></div><label class="gm-notebook">GM Character Notes<textarea id="characterNotes" class="notes" placeholder="Motives, clues, secrets, reminders..."></textarea></label><div class="remove-character-row"><button id="removeCharacterDetails" type="button" class="danger">🗑 Remove Character</button></div></div></section></div></details>
 </div>
 <div class="v6-side">
  <details id="healthTools" class="accordion mobile-panel" open><summary>Health</summary><div class="accordion-body">
@@ -511,11 +693,11 @@ button:hover{border-color:var(--accent)}button.primary{background:linear-gradien
 
     <div class="developer-version-block">
       <span class="developer-version-label">Current Version</span>
-      <strong class="developer-version">v6.6.5</strong>
+      <strong class="developer-version">v6.8.1</strong>
     </div>
 
     <div class="developer-section">
-      <h3>Build Notes</h3>
+      <h3>Build Notes</h3><p><strong>V6.8.1</strong> replaces the generic save spinner with a brass line-art D20 animation styled to match the Scene Board UI.</p><p><strong>V6.7</strong> adds shared character position/size across scenes plus Lock All and Unlock All controls for setup.</p>
       <div class="developer-build-notes">
         <p><strong>V6.6.4</strong> replaces the Developer Info native dialog with a custom overlay for more reliable opening across devices.</p>
         <p>This build includes all cumulative V6.x features and fixes through V6.6.</p>
@@ -548,14 +730,42 @@ const $=id=>document.getElementById(id),app=$("app"),stage=$("stage"),bg=$("back
 let selectedId=null,zTop=10,sceneDialogMode="new";
 const id=()=>crypto.randomUUID?crypto.randomUUID():String(Date.now()+Math.random());
 const freshScene=n=>({id:id(),name:n||"Scene 1",background:null,backgroundView:{fit:"cover",zoom:100,x:50,y:50,locked:false},foreground:null,foregroundView:{fit:"cover",zoom:100,x:50,y:50,opacity:100,locked:false},notes:"",placements:{}});
-const freshCampaign=n=>{const s=freshScene("Scene 1");return{version:5,id:id(),name:n||"Untitled Campaign",scenes:[s],currentSceneId:s.id,characters:[],backgroundLibrary:[],transition:"fade",transitionDuration:0.8,healthDisplayStyle:"bars",turnTracker:{enabled:false,visible:false,order:[],currentIndex:0},updatedAt:new Date().toISOString()}};
+const freshCampaign=n=>{const s=freshScene("Scene 1");return{version:5,id:id(),name:n||"Untitled Campaign",scenes:[s],currentSceneId:s.id,characters:[],backgroundLibrary:[],transition:"fade",transitionDuration:0.8,healthDisplayStyle:"bars",syncCharacterPlacementAcrossScenes:false,turnTracker:{enabled:false,visible:false,order:[],currentIndex:0},updatedAt:new Date().toISOString()}};
 let campaign=freshCampaign();
 const scene=()=>campaign.scenes.find(s=>s.id===campaign.currentSceneId)||campaign.scenes[0];
 const character=()=>campaign.characters.find(c=>c.id===selectedId)||null;
 const defaultPlacement=(i=0)=>({x:45+(i%5)*3,y:86-(i%3)*5,scale:100,z:10+i,hidden:false,locked:false});
 function placement(c){const s=scene();if(!s.placements)s.placements={};if(!s.placements[c.id])s.placements[c.id]=defaultPlacement(campaign.characters.indexOf(c));return s.placements[c.id]}
+function syncSharedCharacterPlacement(c){
+  if(!campaign.syncCharacterPlacementAcrossScenes||!c)return;
+  const source=placement(c);
+  campaign.scenes.forEach(s=>{
+    if(!s.placements)s.placements={};
+    if(!s.placements[c.id])s.placements[c.id]=defaultPlacement(campaign.characters.indexOf(c));
+    const target=s.placements[c.id];
+    target.x=source.x;
+    target.y=source.y;
+    target.scale=source.scale;
+  });
+}
+function syncAllSharedCharacterPlacementsFromCurrentScene(){
+  campaign.characters.forEach(c=>syncSharedCharacterPlacement(c));
+}
+function setAllCharacterLocks(locked){
+  campaign.scenes.forEach(s=>{
+    if(!s.placements)s.placements={};
+    campaign.characters.forEach((c,i)=>{
+      if(!s.placements[c.id])s.placements[c.id]=defaultPlacement(i);
+      s.placements[c.id].locked=locked;
+    });
+  });
+  rebuild();
+  sendPlayerState?.();
+  status.textContent=locked?"All characters locked in every scene":"All characters unlocked in every scene";
+}
+
 function normalizeMedia(b){if(!b)return null;if(typeof b==="string")return{type:"image",mime:"image/*",data:b,name:"Migrated background"};return b}
-function migrate(o){if(!o||!Array.isArray(o.characters))throw Error("Invalid");if(!Array.isArray(o.scenes)||!o.scenes.length){const s=freshScene("Scene 1");s.background=normalizeMedia(o.background);o.scenes=[s];o.currentSceneId=s.id}o.scenes=o.scenes.map((s,i)=>({id:s.id||id(),name:s.name||`Scene ${i+1}`,background:normalizeMedia(s.background),backgroundView:s.backgroundView||{fit:"cover",zoom:100,x:50,y:50,locked:false},foreground:normalizeMedia(s.foreground),foregroundView:s.foregroundView||{fit:"cover",zoom:100,x:50,y:50,opacity:100,locked:false},notes:s.notes||"",placements:s.placements||{}}));o.characters=o.characters.map((c,i)=>{c.id=c.id||id();c.health=c.health||{enabled:false,max:4,current:4,visible:false};if(c.health.max<1)c.health.max=4;c.health.current=Math.max(0,Math.min(c.health.max,c.health.current??c.health.max));c.group=c.group||"Other";c.conditions=Array.isArray(c.conditions)?c.conditions:[];c.conditionsVisible=!!c.conditionsVisible;c.notes=c.notes||"";return c});if((o.version||0)<4){o.scenes.forEach(s=>o.characters.forEach((c,i)=>{if(!s.placements[c.id])s.placements[c.id]={x:c.x??45+(i%5)*3,y:c.y??86-(i%3)*5,scale:c.scale??100,z:c.z??10+i,hidden:!!c.hidden,locked:false}}))}o.backgroundLibrary=Array.isArray(o.backgroundLibrary)?o.backgroundLibrary:[];o.transition=["none","fade","slide-left","slide-right","slide-up","slide-down","dot-zoom"].includes(o.transition)?o.transition:"fade";o.transitionDuration=Number.isFinite(Number(o.transitionDuration))?Math.max(0,Math.min(5,Number(o.transitionDuration))):(o.transition==="none"?0:0.8);o.healthDisplayStyle=["numbers","bars","circles","hearts"].includes(o.healthDisplayStyle)?o.healthDisplayStyle:"bars";o.turnTracker=o.turnTracker||{enabled:false,visible:false,order:[],currentIndex:0};o.turnTracker.order=Array.isArray(o.turnTracker.order)?o.turnTracker.order.filter(cid=>o.characters.some(c=>c.id===cid)):[];o.characters.forEach(c=>{if(!o.turnTracker.order.includes(c.id))o.turnTracker.order.push(c.id)});o.turnTracker.currentIndex=Math.max(0,Math.min(o.turnTracker.currentIndex||0,Math.max(0,o.turnTracker.order.length-1)));o.currentSceneId=o.currentSceneId||o.scenes[0].id;o.version=5;o.id=o.id||id();return o}
+function migrate(o){if(!o||!Array.isArray(o.characters))throw Error("Invalid");if(!Array.isArray(o.scenes)||!o.scenes.length){const s=freshScene("Scene 1");s.background=normalizeMedia(o.background);o.scenes=[s];o.currentSceneId=s.id}o.scenes=o.scenes.map((s,i)=>({id:s.id||id(),name:s.name||`Scene ${i+1}`,background:normalizeMedia(s.background),backgroundView:s.backgroundView||{fit:"cover",zoom:100,x:50,y:50,locked:false},foreground:normalizeMedia(s.foreground),foregroundView:s.foregroundView||{fit:"cover",zoom:100,x:50,y:50,opacity:100,locked:false},notes:s.notes||"",placements:s.placements||{}}));o.characters=o.characters.map((c,i)=>{c.id=c.id||id();c.health=c.health||{enabled:false,max:4,current:4,visible:false};if(c.health.max<1)c.health.max=4;c.health.current=Math.max(0,Math.min(c.health.max,c.health.current??c.health.max));c.group=c.group||"Other";c.conditions=Array.isArray(c.conditions)?c.conditions:[];c.conditionsVisible=!!c.conditionsVisible;c.notes=c.notes||"";return c});if((o.version||0)<4){o.scenes.forEach(s=>o.characters.forEach((c,i)=>{if(!s.placements[c.id])s.placements[c.id]={x:c.x??45+(i%5)*3,y:c.y??86-(i%3)*5,scale:c.scale??100,z:c.z??10+i,hidden:!!c.hidden,locked:false}}))}o.backgroundLibrary=Array.isArray(o.backgroundLibrary)?o.backgroundLibrary:[];o.transition=["none","fade","slide-left","slide-right","slide-up","slide-down","dot-zoom"].includes(o.transition)?o.transition:"fade";o.transitionDuration=Number.isFinite(Number(o.transitionDuration))?Math.max(0,Math.min(5,Number(o.transitionDuration))):(o.transition==="none"?0:0.8);o.healthDisplayStyle=["numbers","bars","circles","hearts"].includes(o.healthDisplayStyle)?o.healthDisplayStyle:"bars";o.syncCharacterPlacementAcrossScenes=!!o.syncCharacterPlacementAcrossScenes;o.turnTracker=o.turnTracker||{enabled:false,visible:false,order:[],currentIndex:0};o.turnTracker.order=Array.isArray(o.turnTracker.order)?o.turnTracker.order.filter(cid=>o.characters.some(c=>c.id===cid)):[];o.characters.forEach(c=>{if(!o.turnTracker.order.includes(c.id))o.turnTracker.order.push(c.id)});o.turnTracker.currentIndex=Math.max(0,Math.min(o.turnTracker.currentIndex||0,Math.max(0,o.turnTracker.order.length-1)));o.currentSceneId=o.currentSceneId||o.scenes[0].id;o.version=5;o.id=o.id||id();return o}
 const dataURL=f=>new Promise((res,rej)=>{const r=new FileReader;r.onload=()=>res(r.result);r.onerror=rej;r.readAsDataURL(f)});
 const clean=n=>(n||"Character").replace(/\.[^.]+$/,"").replace(/[_-]+/g," ").trim()||"Character";
 function backgroundView(){const s=scene();if(!s.backgroundView)s.backgroundView={fit:"cover",zoom:100,x:50,y:50,locked:false};return s.backgroundView}
@@ -571,7 +781,7 @@ function syncTurnOrder(){const t=campaign.turnTracker;t.order=t.order.filter(cid
 function hpMarkup(c){if(!c.health?.enabled||!c.health.visible)return"";const style=campaign.healthDisplayStyle||"bars";if(style==="numbers")return `<span class="hp-display hp-numbers">${c.health.current}/${c.health.max}</span>`;let x=`<span class="hp-display hp-${style}">`;for(let i=0;i<c.health.max;i++)x+=`<span class="hp-seg ${i<c.health.current?"full":""}"></span>`;return x+"</span>"}
 function conditionMarkup(c){if(!c.conditionsVisible||!c.conditions?.length)return"";return '<span class="condition-display">'+c.conditions.map(x=>`<span class="condition-chip">${escapeHtml(x)}</span>`).join("")+"</span>"}
 function escapeHtml(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]))}
-function buildPiece(c){const p=document.createElement("button");p.type="button";p.className="piece";p.dataset.id=c.id;const hp=document.createElement("span");hp.className="hp-wrap";hp.innerHTML=hpMarkup(c);const cd=document.createElement("span");cd.className="condition-wrap";cd.innerHTML=conditionMarkup(c);const im=document.createElement("img");im.src=c.src;im.alt=c.name;const lab=document.createElement("span");lab.className="label";lab.textContent=c.name;p.append(hp,cd,im,lab);pieces.append(p);apply(c);p.addEventListener("click",()=>{selectedId=c.id;selection()});p.addEventListener("pointerdown",e=>{const q=placement(c);if(q.hidden||q.locked)return;selectedId=c.id;selection();p.setPointerCapture(e.pointerId);p._r=stage.getBoundingClientRect()});p.addEventListener("pointermove",e=>{if(!p._r)return;const q=placement(c),r=p._r;q.x=Math.max(2,Math.min(98,(e.clientX-r.left)/r.width*100));q.y=Math.max(8,Math.min(99,(e.clientY-r.top)/r.height*100));apply(c)});["pointerup","pointercancel"].forEach(ev=>p.addEventListener(ev,()=>p._r=null))}
+function buildPiece(c){const p=document.createElement("button");p.type="button";p.className="piece";p.dataset.id=c.id;const hp=document.createElement("span");hp.className="hp-wrap";hp.innerHTML=hpMarkup(c);const cd=document.createElement("span");cd.className="condition-wrap";cd.innerHTML=conditionMarkup(c);const im=document.createElement("img");im.src=c.src;im.alt=c.name;const lab=document.createElement("span");lab.className="label";lab.textContent=c.name;p.append(hp,cd,im,lab);pieces.append(p);apply(c);p.addEventListener("click",()=>{selectedId=c.id;selection()});p.addEventListener("pointerdown",e=>{const q=placement(c);if(q.hidden||q.locked)return;selectedId=c.id;selection();p.setPointerCapture(e.pointerId);p._r=stage.getBoundingClientRect()});p.addEventListener("pointermove",e=>{if(!p._r)return;const q=placement(c),r=p._r;q.x=Math.max(2,Math.min(98,(e.clientX-r.left)/r.width*100));q.y=Math.max(8,Math.min(99,(e.clientY-r.top)/r.height*100));syncSharedCharacterPlacement(c);apply(c)});["pointerup","pointercancel"].forEach(ev=>p.addEventListener(ev,()=>p._r=null))}
 function apply(c){const p=pieces.querySelector(`[data-id="${CSS.escape(c.id)}"]`);if(!p)return;const q=placement(c);p.style.left=q.x+"%";p.style.top=q.y+"%";p.style.transform=`translate(-50%,-100%) scale(${q.scale/100})`;p.style.zIndex=q.z;p.classList.toggle("hidden",q.hidden);p.classList.toggle("locked",q.locked);p.querySelector(".hp-wrap").innerHTML=hpMarkup(c);p.querySelector(".condition-wrap").innerHTML=conditionMarkup(c)}
 function selection(){const c=character(),els=["size","smaller","larger","hideReveal","lockPiece","front","back","remove","removeCharacterDetails"].map($).filter(Boolean);els.forEach(e=>e.disabled=!c);pieces.querySelectorAll(".piece").forEach(p=>p.classList.toggle("selected",c&&p.dataset.id===c.id));if(!c){$("selectedName").textContent="No character selected";renderV5Tools();return}const q=placement(c);$("selectedName").textContent=c.name+(q.hidden?" — hidden":"")+(q.locked?" — locked":"");$("size").value=q.scale;$("hideReveal").textContent=q.hidden?"Reveal":"Hide";$("lockPiece").textContent=q.locked?"Unlock Position":"Lock Position";renderV5Tools()}
 function renderLists(){list.innerHTML="";healthList.innerHTML="";$("characterCount").textContent=`${campaign.characters.length} character${campaign.characters.length===1?"":"s"}`;if(!campaign.characters.length){list.innerHTML='<div class="small">No characters yet.</div>';healthList.innerHTML='<div class="small">Add a character to configure health.</div>';return}
@@ -584,8 +794,23 @@ cb.addEventListener("change",()=>{c.health.enabled=cb.checked;if(c.health.enable
 function sceneSelect(){const s=$("sceneSelect");s.innerHTML="";campaign.scenes.forEach(x=>{const o=document.createElement("option");o.value=x.id;o.textContent=x.name;s.append(o)});s.value=scene().id}
 function rebuild(){ $("campaignTitle").textContent=campaign.name;syncTurnOrder();renderBackground();renderForeground();pieces.innerHTML="";campaign.characters.forEach(buildPiece);sceneSelect();renderLists();selection();renderV5Tools();renderTurnBadge();zTop=Math.max(10,...Object.values(scene().placements||{}).map(p=>p.z||0))}
 $("backgroundFile").addEventListener("change",async e=>{const f=e.target.files?.[0];if(!f)return;if(f.size>20*1024*1024&&!confirm("This background is over 20 MB and may make campaign files slow to save/share. Use it anyway?")){e.target.value="";return}scene().background={type:f.type.startsWith("video/")?"video":"image",mime:f.type,data:await dataURL(f),name:f.name};scene().backgroundView={fit:"cover",zoom:100,x:50,y:50,locked:false};renderBackground();status.textContent=f.type.startsWith("video/")?"Looping video background set":"Image/GIF background set";e.target.value=""});
+
+$("syncAllCharacterPlacement")?.addEventListener("change",e=>{
+  campaign.syncCharacterPlacementAcrossScenes=!!e.target.checked;
+  if(campaign.syncCharacterPlacementAcrossScenes){
+    syncAllSharedCharacterPlacementsFromCurrentScene();
+    status.textContent="Character size and location now stay matched across every scene";
+  }else{
+    status.textContent="Character size and location can now differ by scene";
+  }
+  rebuild();
+  sendPlayerState?.();
+});
+$("lockAllCharacters")?.addEventListener("click",()=>setAllCharacterLocks(true));
+$("unlockAllCharacters")?.addEventListener("click",()=>setAllCharacterLocks(false));
+
 $("characterFiles").addEventListener("change",async e=>{for(const f of [...(e.target.files||[])]){const c={id:id(),name:clean(f.name),src:await dataURL(f),group:"Other",conditions:[],conditionsVisible:false,notes:"",health:{enabled:false,max:4,current:4,visible:false}};campaign.characters.push(c);campaign.turnTracker.order.push(c.id);campaign.scenes.forEach((s,i)=>s.placements[c.id]=defaultPlacement(campaign.characters.length-1));selectedId=c.id}rebuild();e.target.value=""});
-$("size").addEventListener("input",e=>{const c=character();if(c){placement(c).scale=Number(e.target.value);apply(c)}});$("smaller").onclick=()=>{const c=character();if(c){placement(c).scale=Math.max(40,placement(c).scale-10);rebuild()}};$("larger").onclick=()=>{const c=character();if(c){placement(c).scale=Math.min(220,placement(c).scale+10);rebuild()}};$("hideReveal").onclick=()=>{const c=character();if(c){placement(c).hidden=!placement(c).hidden;rebuild()}};$("lockPiece").onclick=()=>{const c=character();if(c){placement(c).locked=!placement(c).locked;rebuild()}};$("front").onclick=()=>{const c=character();if(c){placement(c).z=++zTop;apply(c)}};$("back").onclick=()=>{const c=character();if(c){placement(c).z=Math.min(0,...Object.values(scene().placements).map(p=>p.z||0))-1;apply(c)}};function removeSelectedCharacter(){
+$("size").addEventListener("input",e=>{const c=character();if(c){placement(c).scale=Number(e.target.value);syncSharedCharacterPlacement(c);apply(c)}});$("smaller").onclick=()=>{const c=character();if(c){placement(c).scale=Math.max(40,placement(c).scale-10);syncSharedCharacterPlacement(c);rebuild()}};$("larger").onclick=()=>{const c=character();if(c){placement(c).scale=Math.min(220,placement(c).scale+10);syncSharedCharacterPlacement(c);rebuild()}};$("hideReveal").onclick=()=>{const c=character();if(c){placement(c).hidden=!placement(c).hidden;rebuild()}};$("lockPiece").onclick=()=>{const c=character();if(c){placement(c).locked=!placement(c).locked;rebuild()}};$("front").onclick=()=>{const c=character();if(c){placement(c).z=++zTop;apply(c)}};$("back").onclick=()=>{const c=character();if(c){placement(c).z=Math.min(0,...Object.values(scene().placements).map(p=>p.z||0))-1;apply(c)}};function removeSelectedCharacter(){
   const c=character();
   if(!c){alert("Select a character first.");return}
   const name=c.name||"this character";
@@ -603,10 +828,10 @@ $("size").addEventListener("input",e=>{const c=character();if(c){placement(c).sc
 }
 $("remove").onclick=removeSelectedCharacter;
 $("removeCharacterDetails")?.addEventListener("click",removeSelectedCharacter);
-$("resetPositions").onclick=()=>{campaign.characters.forEach((c,i)=>scene().placements[c.id]=defaultPlacement(i));rebuild();status.textContent="Current scene positions reset"};
+$("resetPositions").onclick=()=>{campaign.characters.forEach((c,i)=>scene().placements[c.id]=defaultPlacement(i));if(campaign.syncCharacterPlacementAcrossScenes)syncAllSharedCharacterPlacementsFromCurrentScene();rebuild();status.textContent=campaign.syncCharacterPlacementAcrossScenes?"Positions reset across all scenes":"Current scene positions reset"};
 $("hideAllHealth").onclick=()=>{campaign.characters.forEach(c=>c.health.visible=false);rebuild();status.textContent="All player health displays hidden"};
 $("sceneSelect").onchange=e=>changeScene(e.target.value);$("newScene").onclick=()=>{sceneDialogMode="new";$("sceneDialogTitle").textContent="New Scene";$("sceneNameInput").value="";$("sceneDialog").showModal()};$("renameScene").onclick=()=>{sceneDialogMode="rename";$("sceneDialogTitle").textContent="Rename Scene";$("sceneNameInput").value=scene().name;$("sceneDialog").showModal()};$("duplicateScene").onclick=()=>{const old=scene(),copy={id:id(),name:old.name+" Copy",background:old.background?structuredClone(old.background):null,backgroundView:structuredClone(old.backgroundView||{fit:"cover",zoom:100,x:50,y:50,locked:false}),foreground:old.foreground?structuredClone(old.foreground):null,foregroundView:structuredClone(old.foregroundView||{fit:"cover",zoom:100,x:50,y:50,opacity:100,locked:false}),notes:old.notes||"",placements:structuredClone(old.placements||{})};campaign.scenes.push(copy);campaign.currentSceneId=copy.id;rebuild();status.textContent="Scene duplicated"};$("deleteScene").onclick=()=>{if(campaign.scenes.length===1){status.textContent="A campaign must keep one scene";return}const old=scene();campaign.scenes=campaign.scenes.filter(s=>s.id!==old.id);campaign.currentSceneId=campaign.scenes[0].id;rebuild()};
-$("sceneDialogConfirm").onclick=e=>{e.preventDefault();const n=$("sceneNameInput").value.trim();if(!n)return;if(sceneDialogMode==="new"){const s=freshScene(n);campaign.characters.forEach((c,i)=>s.placements[c.id]=defaultPlacement(i));campaign.scenes.push(s);campaign.currentSceneId=s.id}else scene().name=n;$("sceneDialog").close();rebuild()};
+$("sceneDialogConfirm").onclick=e=>{e.preventDefault();const n=$("sceneNameInput").value.trim();if(!n)return;if(sceneDialogMode==="new"){const sourceScene=scene();const s=freshScene(n);campaign.characters.forEach((c,i)=>{s.placements[c.id]=defaultPlacement(i);if(campaign.syncCharacterPlacementAcrossScenes){const src=sourceScene.placements?.[c.id];if(src){s.placements[c.id].x=src.x;s.placements[c.id].y=src.y;s.placements[c.id].scale=src.scale}}});campaign.scenes.push(s);campaign.currentSceneId=s.id}else scene().name=n;$("sceneDialog").close();rebuild()};
 async function changeScene(nextId){
 if(nextId===campaign.currentSceneId)return;
 const type=campaign.transition||"fade";
@@ -664,7 +889,7 @@ if(type.startsWith("slide-")&&sec>0){
 
 $("foregroundFile").addEventListener("change",async e=>{const f=e.target.files?.[0];if(!f)return;if(f.size>20*1024*1024&&!confirm("This foreground is over 20 MB and may make campaign files slow to save/share. Use it anyway?")){e.target.value="";return}scene().foreground={type:f.type.startsWith("video/")?"video":"image",mime:f.type,data:await dataURL(f),name:f.name};scene().foregroundView={fit:"cover",zoom:100,x:50,y:50,opacity:100,locked:false};renderForeground();renderV5Tools();status.textContent=f.type.startsWith("video/")?"Looping video foreground set":"Foreground image/GIF set";e.target.value=""});
 $("clearForeground").onclick=()=>{scene().foreground=null;scene().foregroundView={fit:"cover",zoom:100,x:50,y:50,opacity:100,locked:false};renderForeground();renderV5Tools();status.textContent="Foreground cleared"};
-function renderV5Tools(){const s=scene(),bv=backgroundView();$("sceneNotes").value=s.notes||"";$("transitionSelect").value=campaign.transition||"fade";$("fadeDuration").value=campaign.transition==="none"?0:(campaign.transitionDuration??0.8);$("fadeDurationVal").textContent=(campaign.transition==="none"||Number(campaign.transitionDuration)===0)?"Instant":`${Number(campaign.transitionDuration??0.8).toFixed(1)} sec`;$("bgFit").value=bv.fit||"cover";$("bgZoom").value=bv.zoom??100;$("bgX").value=bv.x??50;$("bgY").value=bv.y??50;$("bgZoomVal").textContent=`${bv.zoom??100}%`;$("bgXVal").textContent=`${bv.x??50}%`;$("bgYVal").textContent=`${bv.y??50}%`;$("bgLock").textContent=bv.locked?"Unlock Background":"Lock Background";["bgFit","bgZoom","bgX","bgY","bgReset"].forEach(k=>$(k).disabled=!!bv.locked);$("bgFrameControls").classList.toggle("bg-frame-locked",!!bv.locked);const fv=foregroundView();$("fgFit").value=fv.fit||"cover";$("fgZoom").value=fv.zoom??100;$("fgX").value=fv.x??50;$("fgY").value=fv.y??50;$("fgOpacity").value=fv.opacity??100;$("fgZoomVal").textContent=`${fv.zoom??100}%`;$("fgXVal").textContent=`${fv.x??50}%`;$("fgYVal").textContent=`${fv.y??50}%`;$("fgOpacityVal").textContent=`${fv.opacity??100}%`;$("fgLock").textContent=fv.locked?"Unlock Foreground":"Lock Foreground";["fgFit","fgZoom","fgX","fgY","fgOpacity","fgReset"].forEach(k=>$(k).disabled=!!fv.locked);const lib=$("bgLibrary"),keep=lib.value;lib.innerHTML='<option value="">Background Library</option>';campaign.backgroundLibrary.forEach(x=>{const o=document.createElement("option");o.value=x.id;o.textContent=x.name;lib.append(o)});if([...lib.options].some(o=>o.value===keep))lib.value=keep;const c=character();$("characterToolEmpty").style.display=c?"none":"block";$("characterToolBody").style.display=c?"grid":"none";if(c){$("characterGroup").value=c.group||"Other";$("conditionsVisible").checked=!!c.conditionsVisible;$("characterNotes").value=c.notes||"";const box=$("conditionList");box.innerHTML="";(c.conditions||[]).forEach((x,i)=>{const b=document.createElement("button");b.type="button";b.textContent=x+" ×";b.onclick=()=>{c.conditions.splice(i,1);apply(c);renderV5Tools()};box.append(b)})}const t=campaign.turnTracker;$("turnEnabled").checked=!!t.enabled;$("turnVisible").checked=!!t.visible;const tl=$("turnList");tl.innerHTML="";t.order.forEach((cid,i)=>{const c2=campaign.characters.find(c=>c.id===cid);if(!c2)return;const r=document.createElement("div");r.className="turn-row"+(i===t.currentIndex&&t.enabled?" current":"");const n=document.createElement("button");n.type="button";n.textContent=c2.name;n.onclick=()=>{t.currentIndex=i;renderV5Tools();renderTurnBadge()};const up=document.createElement("button");up.textContent="↑";up.disabled=i===0;up.onclick=()=>{[t.order[i-1],t.order[i]]=[t.order[i],t.order[i-1]];if(t.currentIndex===i)t.currentIndex=i-1;else if(t.currentIndex===i-1)t.currentIndex=i;renderV5Tools();renderTurnBadge()};const dn=document.createElement("button");dn.textContent="↓";dn.disabled=i===t.order.length-1;dn.onclick=()=>{[t.order[i+1],t.order[i]]=[t.order[i],t.order[i+1]];if(t.currentIndex===i)t.currentIndex=i+1;else if(t.currentIndex===i+1)t.currentIndex=i;renderV5Tools();renderTurnBadge()};r.append(n,up,dn);tl.append(r)})}
+function renderV5Tools(){const s=scene(),bv=backgroundView();if($("syncAllCharacterPlacement"))$("syncAllCharacterPlacement").checked=!!campaign.syncCharacterPlacementAcrossScenes;$("sceneNotes").value=s.notes||"";$("transitionSelect").value=campaign.transition||"fade";$("fadeDuration").value=campaign.transition==="none"?0:(campaign.transitionDuration??0.8);$("fadeDurationVal").textContent=(campaign.transition==="none"||Number(campaign.transitionDuration)===0)?"Instant":`${Number(campaign.transitionDuration??0.8).toFixed(1)} sec`;$("bgFit").value=bv.fit||"cover";$("bgZoom").value=bv.zoom??100;$("bgX").value=bv.x??50;$("bgY").value=bv.y??50;$("bgZoomVal").textContent=`${bv.zoom??100}%`;$("bgXVal").textContent=`${bv.x??50}%`;$("bgYVal").textContent=`${bv.y??50}%`;$("bgLock").textContent=bv.locked?"Unlock Background":"Lock Background";["bgFit","bgZoom","bgX","bgY","bgReset"].forEach(k=>$(k).disabled=!!bv.locked);$("bgFrameControls").classList.toggle("bg-frame-locked",!!bv.locked);const fv=foregroundView();$("fgFit").value=fv.fit||"cover";$("fgZoom").value=fv.zoom??100;$("fgX").value=fv.x??50;$("fgY").value=fv.y??50;$("fgOpacity").value=fv.opacity??100;$("fgZoomVal").textContent=`${fv.zoom??100}%`;$("fgXVal").textContent=`${fv.x??50}%`;$("fgYVal").textContent=`${fv.y??50}%`;$("fgOpacityVal").textContent=`${fv.opacity??100}%`;$("fgLock").textContent=fv.locked?"Unlock Foreground":"Lock Foreground";["fgFit","fgZoom","fgX","fgY","fgOpacity","fgReset"].forEach(k=>$(k).disabled=!!fv.locked);const lib=$("bgLibrary"),keep=lib.value;lib.innerHTML='<option value="">Background Library</option>';campaign.backgroundLibrary.forEach(x=>{const o=document.createElement("option");o.value=x.id;o.textContent=x.name;lib.append(o)});if([...lib.options].some(o=>o.value===keep))lib.value=keep;const c=character();$("characterToolEmpty").style.display=c?"none":"block";$("characterToolBody").style.display=c?"grid":"none";if(c){$("characterGroup").value=c.group||"Other";$("conditionsVisible").checked=!!c.conditionsVisible;$("characterNotes").value=c.notes||"";const box=$("conditionList");box.innerHTML="";(c.conditions||[]).forEach((x,i)=>{const b=document.createElement("button");b.type="button";b.textContent=x+" ×";b.onclick=()=>{c.conditions.splice(i,1);apply(c);renderV5Tools()};box.append(b)})}const t=campaign.turnTracker;$("turnEnabled").checked=!!t.enabled;$("turnVisible").checked=!!t.visible;const tl=$("turnList");tl.innerHTML="";t.order.forEach((cid,i)=>{const c2=campaign.characters.find(c=>c.id===cid);if(!c2)return;const r=document.createElement("div");r.className="turn-row"+(i===t.currentIndex&&t.enabled?" current":"");const n=document.createElement("button");n.type="button";n.textContent=c2.name;n.onclick=()=>{t.currentIndex=i;renderV5Tools();renderTurnBadge()};const up=document.createElement("button");up.textContent="↑";up.disabled=i===0;up.onclick=()=>{[t.order[i-1],t.order[i]]=[t.order[i],t.order[i-1]];if(t.currentIndex===i)t.currentIndex=i-1;else if(t.currentIndex===i-1)t.currentIndex=i;renderV5Tools();renderTurnBadge()};const dn=document.createElement("button");dn.textContent="↓";dn.disabled=i===t.order.length-1;dn.onclick=()=>{[t.order[i+1],t.order[i]]=[t.order[i],t.order[i+1]];if(t.currentIndex===i)t.currentIndex=i+1;else if(t.currentIndex===i+1)t.currentIndex=i;renderV5Tools();renderTurnBadge()};r.append(n,up,dn);tl.append(r)})}
 $("sceneNotes").addEventListener("input",e=>scene().notes=e.target.value);
 $("transitionSelect").onchange=e=>{
   campaign.transition=e.target.value;
@@ -710,7 +935,54 @@ $("turnEnabled").onchange=e=>{campaign.turnTracker.enabled=e.target.checked;rend
 $("tvMode").onclick=()=>app.classList.add("tv-mode");$("tvExit").onclick=()=>app.classList.remove("tv-mode");
 $("newCampaign").onclick=()=>{$("newDialog").showModal()};$("confirmNew").onclick=e=>{e.preventDefault();campaign=freshCampaign($("newName").value.trim()||"Untitled Campaign");selectedId=null;$("newDialog").close();rebuild()};
 const DB="scene-board-db",STORE="campaigns";function db(){return new Promise((res,rej)=>{const r=indexedDB.open(DB,1);r.onupgradeneeded=()=>{if(!r.result.objectStoreNames.contains(STORE))r.result.createObjectStore(STORE,{keyPath:"id"})};r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)})}async function put(o){const d=await db();return new Promise((res,rej)=>{const t=d.transaction(STORE,"readwrite");t.objectStore(STORE).put(o);t.oncomplete=res;t.onerror=()=>rej(t.error)})}async function all(){const d=await db();return new Promise((res,rej)=>{const r=d.transaction(STORE).objectStore(STORE).getAll();r.onsuccess=()=>res(r.result||[]);r.onerror=()=>rej(r.error)})}async function get(k){const d=await db();return new Promise((res,rej)=>{const r=d.transaction(STORE).objectStore(STORE).get(k);r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)})}
-$("saveCampaign").onclick=async()=>{campaign.updatedAt=new Date().toISOString();try{await put(structuredClone(campaign));status.textContent="Campaign saved"}catch{status.textContent="Save failed. Large video files can exceed browser storage."}};
+
+let saveToastTimer=null;
+function setSaving(active){
+  const overlay=$("saveOverlay");
+  const btn=$("saveCampaign");
+  if(overlay){
+    overlay.classList.toggle("open",!!active);
+    overlay.setAttribute("aria-hidden",active?"false":"true");
+  }
+  if(btn){
+    btn.disabled=!!active;
+    btn.dataset.oldText=btn.dataset.oldText||btn.textContent;
+    btn.textContent=active?"Saving…":btn.dataset.oldText;
+  }
+}
+function showSaveToast(ok=true,detail="Saved on this device."){
+  const toast=$("saveToast");
+  if(!toast)return;
+  clearTimeout(saveToastTimer);
+  toast.classList.toggle("error",!ok);
+  const icon=toast.querySelector(".save-toast-icon");
+  if(icon)icon.textContent=ok?"✓":"!";
+  const title=toast.querySelector("strong");
+  if(title)title.textContent=ok?"Campaign saved":"Save failed";
+  if($("saveToastDetail"))$("saveToastDetail").textContent=detail;
+  toast.classList.add("show");
+  saveToastTimer=setTimeout(()=>toast.classList.remove("show"),3000);
+}
+$("saveCampaign").onclick=async()=>{
+  if($("saveCampaign").disabled)return;
+  campaign.updatedAt=new Date().toISOString();
+  setSaving(true);
+  status.textContent="Saving campaign…";
+  // Give the loading overlay a chance to paint before cloning/writing a large campaign.
+  await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
+  try{
+    await put(structuredClone(campaign));
+    status.textContent="Campaign saved";
+    const when=new Date(campaign.updatedAt).toLocaleTimeString([],{hour:"numeric",minute:"2-digit"});
+    showSaveToast(true,`Saved on this device at ${when}.`);
+  }catch(e){
+    console.error("Campaign save failed",e);
+    status.textContent="Save failed. Large video files can exceed browser storage.";
+    showSaveToast(false,"Could not save. Browser storage may be full, especially with large videos.");
+  }finally{
+    setSaving(false);
+  }
+};
 $("loadCampaign").onclick=async()=>{const box=$("savedList");box.innerHTML="";const a=await all();if(!a.length)box.innerHTML='<div class="small">No saved campaigns.</div>';a.forEach(c=>{const b=document.createElement("button");b.type="button";b.textContent=c.name;b.onclick=async()=>{campaign=migrate(await get(c.id));selectedId=null;$("loadDialog").close();rebuild()};box.append(b)});$("loadDialog").showModal()};
 function campFile(){campaign.updatedAt=new Date().toISOString();const safe=(campaign.name||"campaign").replace(/[^a-z0-9_-]+/gi,"_"),blob=new Blob([JSON.stringify(campaign)],{type:"application/json"}),file=new File([blob],safe+".scene-board.json",{type:"application/json"});return{safe,blob,file}}
 $("shareCampaign").onclick=async()=>{const {file}=campFile();try{if(navigator.canShare?.({files:[file]})){await navigator.share({title:campaign.name,files:[file],text:"Tabletop Scene Board campaign"})}else status.textContent="Use Export File on this browser."}catch(e){if(e.name!=="AbortError")status.textContent="Share failed; use Export File."}};
@@ -1188,7 +1460,7 @@ $("clearDeveloperNotes")?.addEventListener("click",()=>{
   if(developerNoteSaved)developerNoteSaved.textContent="Notes cleared.";
 });
 
-if("serviceWorker"in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js?v=6.6.5").catch(()=>{}));rebuild();
+if("serviceWorker"in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js?v=6.8.1").catch(()=>{}));rebuild();
 })();
 </script>
 
