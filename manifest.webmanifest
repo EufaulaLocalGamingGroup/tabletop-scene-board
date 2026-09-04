@@ -1,7 +1,7 @@
 {
   "name": "Tabletop Scene Board",
   "short_name": "Scene Board",
-  "description": "Tabletop GM scene board with reliable Health and GM Notes drawers, configurable health display styles, local split Player Display, and TV presentation.",
+  "description": "Tabletop GM scene board with short-code Player Display pairing, configurable health display styles, GM tools, and TV presentation.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

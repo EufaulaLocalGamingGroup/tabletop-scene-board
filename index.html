@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#1f2d25">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>Tabletop Scene Board v6.8.1</title>
+<title>Tabletop Scene Board v6.9</title>
 <meta name="scene-board-build" content="6.6.5">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png" type="image/png">
@@ -73,6 +73,7 @@ button:hover{border-color:var(--accent)}button.primary{background:linear-gradien
 .player-display .player-display-exit{display:block}
 .pair-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .pair-card{border:1px solid var(--line);border-radius:12px;padding:10px;display:grid;gap:8px;background:#15120f}
+.pairing-code{font:800 clamp(28px,5vw,44px)/1 ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:.12em;text-align:center;color:#ead9ad;background:#0e0c09;border:1px solid #6b5735;border-radius:12px;padding:14px 8px;user-select:all}.pair-card input{text-transform:uppercase;font:800 20px ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:.12em;text-align:center}.pair-ready{color:#9ed6a3;font-weight:800}
 .pair-code{width:100%;min-height:110px;resize:vertical;border:1px solid var(--line);border-radius:9px;background:#0e0c09;color:#eadfc8;padding:8px;font:11px/1.35 ui-monospace,SFMono-Regular,Consolas,monospace}
 .pair-help{font-size:12px;color:var(--muted)}
 @media(max-width:700px){.pair-grid{grid-template-columns:1fr}.pair-code{min-height:90px}}
@@ -484,7 +485,7 @@ body.tv-mode .save-toast,
 </div>
 
 <div class="topbar filebar">
- <div class="grow"><div class="small">Campaign · Scene Board v6.8.1</div><div id="campaignTitle" class="campaign-name">Untitled Campaign</div></div>
+ <div class="grow"><div class="small">Campaign · Scene Board v6.9</div><div id="campaignTitle" class="campaign-name">Untitled Campaign</div></div>
  <span id="modePill" class="mode-pill">🎲 GM Mode</span><span id="displayLinkPill" class="link-pill">📺 Local Display: Off</span><button id="modeToggle" class="primary">Session Setup</button><button id="newCampaign" class="setup-only">New</button><button id="saveCampaign">Save</button><button id="loadCampaign" class="setup-only">Load</button><button id="shareCampaign" class="setup-only">Share Campaign</button><button id="exportCampaign" class="setup-only">Export File</button>
  <label class="filebtn setup-only"><button type="button">Import Campaign</button><input id="importFile" type="file" accept=".json,application/json"></label><button id="tvMode">TV View</button>
 </div>
@@ -606,26 +607,27 @@ body.tv-mode .save-toast,
 <dialog id="displayDialog">
  <form method="dialog">
   <div class="row" style="justify-content:space-between"><strong>Player Display</strong><button value="cancel">Close</button></div>
-  <div class="small">Choose the current mirrored TV View, or connect a second device on the same local network. Local split display does not use a cloud account or remote server.</div>
+  <div class="small">Pair a second device with a short code. Keep both devices on the same local network for the most reliable direct connection.</div>
   <div class="pair-grid">
    <div class="pair-card">
     <strong>GM device</strong>
-    <div class="pair-help">1. Create an offer here. 2. Copy it to the Player Display device. 3. Paste the answer back here.</div>
-    <button id="makeLocalOffer" type="button" class="primary">Start Local GM Display</button>
-    <textarea id="localOfferCode" class="pair-code" readonly placeholder="GM offer code appears here"></textarea>
-    <textarea id="localAnswerInput" class="pair-code" placeholder="Paste the Player Display answer here"></textarea>
-    <div class="row"><button id="acceptLocalAnswer" type="button">Connect Answer</button><button id="resyncLocalDisplay" type="button">Resync</button><button id="disconnectLocalDisplay" type="button" class="danger">Disconnect</button></div>
+    <div class="pair-help">Host a Player Display session, then read or copy the short code to the player device.</div>
+    <button id="hostPlayerDisplay" type="button" class="primary">Host Player Display</button>
+    <div id="pairingCodeDisplay" class="pairing-code">----</div>
+    <button id="copyPairingCode" type="button">Copy Pairing Code</button>
+    <div id="gmPairStatus" class="small">Not hosting.</div>
    </div>
    <div class="pair-card">
-    <strong>Player Display device</strong>
-    <div class="pair-help">Paste the GM offer from the other device, then send the generated answer back to the GM.</div>
-    <textarea id="remoteOfferInput" class="pair-code" placeholder="Paste GM offer here"></textarea>
-    <button id="joinLocalDisplay" type="button" class="primary">Create Player Answer</button>
-    <textarea id="playerAnswerCode" class="pair-code" readonly placeholder="Player answer code appears here"></textarea>
-    <button id="enterPlayerDisplay" type="button">Use This Device as Player Display</button>
+    <strong>Player device</strong>
+    <div class="pair-help">Enter the code shown on the GM device. No campaign file or manual offer/answer copy is needed.</div>
+    <input id="joinPairingCode" type="text" maxlength="7" autocomplete="off" autocapitalize="characters" placeholder="ABCD-12" />
+    <button id="joinPlayerDisplay" type="button" class="primary">Join Player Display</button>
+    <div id="playerPairStatus" class="small">Not joined.</div>
    </div>
   </div>
+  <div class="row"><button id="resyncLocalDisplay" type="button">Resend Scene</button><button id="disconnectLocalDisplay" type="button" class="danger">Disconnect</button></div>
   <div id="displayStatus" class="small">Not connected.</div>
+  <div id="displayStageStatus" class="small"></div>
  </form>
 </dialog>
 
@@ -693,11 +695,11 @@ body.tv-mode .save-toast,
 
     <div class="developer-version-block">
       <span class="developer-version-label">Current Version</span>
-      <strong class="developer-version">v6.8.1</strong>
+      <strong class="developer-version">v6.9</strong>
     </div>
 
     <div class="developer-section">
-      <h3>Build Notes</h3><p><strong>V6.8.1</strong> replaces the generic save spinner with a brass line-art D20 animation styled to match the Scene Board UI.</p><p><strong>V6.7</strong> adds shared character position/size across scenes plus Lock All and Unlock All controls for setup.</p>
+      <h3>Build Notes</h3><p><strong>V6.9</strong> replaces manual Player Display offer/answer copying with short-code Cloudflare signaling, direct WebRTC pairing, chunked scene sync, and explicit Player Display Ready acknowledgement.</p><p><strong>V6.8.1</strong> replaces the generic save spinner with a brass line-art D20 animation styled to match the Scene Board UI.</p><p><strong>V6.7</strong> adds shared character position/size across scenes plus Lock All and Unlock All controls for setup.</p>
       <div class="developer-build-notes">
         <p><strong>V6.6.4</strong> replaces the Developer Info native dialog with a custom overlay for more reliable opening across devices.</p>
         <p>This build includes all cumulative V6.x features and fixes through V6.6.</p>
@@ -1145,71 +1147,151 @@ rebuild=function(){
   syncCampaignMenu?.();
 }
 
-// ---- V6.1 Local GM ↔ Player Display (same LAN, manual WebRTC pairing) ----
-let localPeer=null, localChannel=null, localRole=null, playerDisplayArmed=false;
-let rxChunks=new Map(), txSeq=0, localSyncTimer=null;
+// ---- V6.9 Player Display: short-code Cloudflare signaling + direct WebRTC ----
+const PAIRING_HTTP="https://scene-board-pairing.eufaulalocalgaminggroup.workers.dev";
+const PAIRING_WS="wss://scene-board-pairing.eufaulalocalgaminggroup.workers.dev";
+let localPeer=null,localChannel=null,localRole=null,playerDisplayArmed=false;
+let signalingSocket=null,currentPairCode="",hostToken="",pendingIce=[];
+let rxChunks=new Map(),txSeq=0,localSyncTimer=null,txQueue=Promise.resolve();
+let lastFullSignature="",playerReady=false;
 
-function setDisplayStatus(text,connected=false){
+function setDisplayStatus(text,connected=false,ready=false){
   if($("displayStatus"))$("displayStatus").textContent=text;
   if($("displayLinkPill")){
-    $("displayLinkPill").textContent=connected?"📺 Local Display: Connected":"📺 Local Display: Off";
-    $("displayLinkPill").classList.toggle("connected",connected);
+    $("displayLinkPill").textContent=ready?"📺 Player Display: Ready":connected?"📺 Player Display: Connected":"📺 Player Display: Off";
+    $("displayLinkPill").classList.toggle("connected",connected||ready);
   }
 }
-function waitIce(pc){
-  if(pc.iceGatheringState==="complete")return Promise.resolve();
-  return new Promise(resolve=>{
-    const f=()=>{if(pc.iceGatheringState==="complete"){pc.removeEventListener("icegatheringstatechange",f);resolve()}};
-    pc.addEventListener("icegatheringstatechange",f);
-    setTimeout(resolve,3500);
-  });
+function setDisplayStage(text){if($("displayStageStatus"))$("displayStageStatus").textContent=text||""}
+function normalizePairCode(v){
+  const raw=String(v||"").toUpperCase().replace(/[^A-Z0-9]/g,"");
+  if(raw.length===6)return raw.slice(0,4)+"-"+raw.slice(4);
+  return String(v||"").toUpperCase().trim();
 }
-function encodeSignal(desc){return btoa(unescape(encodeURIComponent(JSON.stringify(desc))))}
-function decodeSignal(code){return JSON.parse(decodeURIComponent(escape(atob(code.trim()))))}
+function sendSignal(payload){
+  if(signalingSocket?.readyState===WebSocket.OPEN)signalingSocket.send(JSON.stringify(payload));
+}
+async function flushPendingIce(){
+  if(!localPeer?.remoteDescription)return;
+  const list=pendingIce.splice(0);
+  for(const c of list){try{await localPeer.addIceCandidate(c)}catch{}}
+}
 function newPeer(){
   if(localPeer)try{localPeer.close()}catch{}
   localPeer=new RTCPeerConnection({iceServers:[]});
+  localPeer.onicecandidate=e=>{if(e.candidate)sendSignal({type:"ice",candidate:e.candidate})};
   localPeer.onconnectionstatechange=()=>{
     const s=localPeer.connectionState;
-    if(s==="connected"){setDisplayStatus(localRole==="gm"?"Player Display connected.":"Connected to GM.",true);if(localRole==="gm")sendFullPlayerSync()}
-    if(["failed","closed","disconnected"].includes(s))setDisplayStatus("Local Player Display disconnected.",false);
+    if(s==="connected"){
+      setDisplayStatus(localRole==="gm"?"Player connected. Sending scene…":"Connected to GM. Receiving scene…",true,false);
+      setDisplayStage(localRole==="gm"?"Connected → Sending scene…":"Connected → Receiving scene…");
+    }
+    if(["failed","closed","disconnected"].includes(s)){
+      playerReady=false;
+      setDisplayStatus("Player Display disconnected.",false,false);
+      setDisplayStage("Connection lost. You can reconnect with a new code.");
+    }
   };
   return localPeer;
 }
 function bindChannel(ch){
   localChannel=ch;
-  ch.onopen=()=>{setDisplayStatus(localRole==="gm"?"Player Display connected.":"Connected to GM.",true);if(localRole==="gm")sendFullPlayerSync()};
-  ch.onclose=()=>setDisplayStatus("Local Player Display disconnected.",false);
+  ch.bufferedAmountLowThreshold=256*1024;
+  ch.onopen=()=>{
+    setDisplayStatus(localRole==="gm"?"Player connected. Sending scene…":"Connected to GM. Receiving scene…",true,false);
+    setDisplayStage(localRole==="gm"?"Connected → Sending scene…":"Connected → Receiving scene…");
+    if(localRole==="gm")sendFullPlayerSync();
+  };
+  ch.onclose=()=>{playerReady=false;setDisplayStatus("Player Display disconnected.",false,false)};
   ch.onmessage=e=>receiveLocalMessage(e.data);
 }
-function publicCampaign(){
+function currentVisibleCharacters(){
+  const s=scene();
+  return campaign.characters.filter(c=>!(s.placements?.[c.id]?.hidden));
+}
+function buildPlayerCampaign(){
+  const srcScene=structuredClone(scene());
+  srcScene.notes="";
+  const visible=currentVisibleCharacters();
+  const ids=new Set(visible.map(c=>c.id));
+  srcScene.placements=Object.fromEntries(Object.entries(srcScene.placements||{}).filter(([cid])=>ids.has(cid)).map(([cid,p])=>[cid,{...p,hidden:false}]));
   const c=structuredClone(campaign);
-  c.scenes.forEach(s=>{s.notes=""});
-  c.characters.forEach(ch=>{ch.notes=""});
+  c.scenes=[srcScene];
+  c.currentSceneId=srcScene.id;
+  c.characters=visible.map(ch=>({...structuredClone(ch),notes:""}));
   c.backgroundLibrary=[];
+  c.turnTracker={...structuredClone(campaign.turnTracker),order:(campaign.turnTracker?.order||[]).filter(cid=>ids.has(cid))};
   return c;
 }
-function sendChunked(kind,payload){
-  if(!localChannel||localChannel.readyState!=="open")return;
-  const raw=JSON.stringify({kind,payload}), size=14000, id=Date.now().toString(36)+"-"+(++txSeq);
-  const total=Math.ceil(raw.length/size);
+function playerFullSignature(){
+  const s=scene(),vis=currentVisibleCharacters();
+  const mediaSig=m=>m?`${m.type||""}:${m.name||""}:${m.data?.length||0}:${String(m.data||"").slice(-24)}`:"none";
+  return [s.id,mediaSig(s.background),mediaSig(s.foreground),...vis.map(c=>`${c.id}:${c.src?.length||0}:${String(c.src||"").slice(-24)}`)].join("|");
+}
+async function waitChannelBuffer(ch){
+  if(ch.bufferedAmount<512*1024)return;
+  await new Promise(resolve=>{
+    const done=()=>{ch.removeEventListener("bufferedamountlow",done);resolve()};
+    ch.addEventListener("bufferedamountlow",done,{once:true});
+    setTimeout(done,1200);
+  });
+}
+async function sendChunkedNow(kind,payload){
+  const ch=localChannel;if(!ch||ch.readyState!=="open")return;
+  const raw=JSON.stringify({kind,payload}),size=12000,id=Date.now().toString(36)+"-"+(++txSeq),total=Math.ceil(raw.length/size);
   for(let i=0;i<total;i++){
+    if(!localChannel||localChannel.readyState!=="open")return;
+    await waitChannelBuffer(localChannel);
     localChannel.send(JSON.stringify({__chunk:1,id,i,total,data:raw.slice(i*size,(i+1)*size)}));
   }
 }
-function sendFullPlayerSync(){sendChunked("full",{campaign:publicCampaign()})}
+function sendChunked(kind,payload){
+  txQueue=txQueue.then(()=>sendChunkedNow(kind,payload)).catch(err=>{setDisplayStatus("Scene sync failed: "+err.message,true,false);setDisplayStage("Player connected, scene not ready. Resend Scene.")});
+  return txQueue;
+}
+function sendFullPlayerSync(){
+  if(localRole!=="gm"||!localChannel||localChannel.readyState!=="open")return;
+  playerReady=false;
+  lastFullSignature=playerFullSignature();
+  setDisplayStatus("Player connected. Sending scene…",true,false);
+  setDisplayStage("Connected → Receiving scene…");
+  sendChunked("initial-display-state",{campaign:buildPlayerCampaign()});
+}
 function lightweightState(){
+  const s=scene(),visible=currentVisibleCharacters(),ids=new Set(visible.map(c=>c.id));
   return {
-    currentSceneId:campaign.currentSceneId,
-    scenes:campaign.scenes.map(s=>({id:s.id,name:s.name,backgroundView:s.backgroundView,foregroundView:s.foregroundView,placements:s.placements})),
-    characters:campaign.characters.map(c=>({id:c.id,name:c.name,group:c.group,conditions:c.conditions,conditionsVisible:c.conditionsVisible,health:c.health})),
-    turnTracker:campaign.turnTracker,transition:campaign.transition,transitionDuration:campaign.transitionDuration??0.8,healthDisplayStyle:campaign.healthDisplayStyle||"bars"
+    currentSceneId:s.id,
+    scene:{id:s.id,name:s.name,backgroundView:s.backgroundView,foregroundView:s.foregroundView,placements:Object.fromEntries(Object.entries(s.placements||{}).filter(([cid])=>ids.has(cid)))},
+    characters:visible.map(c=>({id:c.id,name:c.name,group:c.group,conditions:c.conditions,conditionsVisible:c.conditionsVisible,health:c.health})),
+    turnTracker:{...structuredClone(campaign.turnTracker),order:(campaign.turnTracker?.order||[]).filter(cid=>ids.has(cid))},
+    transition:campaign.transition,transitionDuration:campaign.transitionDuration??0.8,healthDisplayStyle:campaign.healthDisplayStyle||"bars"
   };
 }
 function sendPlayerState(){
   if(localRole!=="gm"||!localChannel||localChannel.readyState!=="open")return;
   clearTimeout(localSyncTimer);
-  localSyncTimer=setTimeout(()=>sendChunked("state",lightweightState()),35);
+  localSyncTimer=setTimeout(()=>{
+    const sig=playerFullSignature();
+    if(sig!==lastFullSignature)sendFullPlayerSync();
+    else sendChunked("state",lightweightState());
+  },60);
+}
+function mediaReadyPromise(){
+  const tasks=[];
+  const addImage=src=>{if(!src)return;tasks.push(new Promise(resolve=>{const im=new Image();im.onload=resolve;im.onerror=resolve;im.src=src;if(im.complete)resolve()}))};
+  const s=scene();
+  if(s.background?.type!=="video")addImage(s.background?.data);
+  if(s.foreground?.type!=="video")addImage(s.foreground?.data);
+  campaign.characters.forEach(c=>addImage(c.src));
+  [bgv,foregroundVideo].forEach(v=>{if(v.style.display==="block"&&v.src)tasks.push(new Promise(resolve=>{if(v.readyState>=2)return resolve();const done=()=>resolve();v.addEventListener("loadeddata",done,{once:true});v.addEventListener("error",done,{once:true})}))});
+  return Promise.race([Promise.allSettled(tasks),new Promise(resolve=>setTimeout(resolve,10000))]);
+}
+async function markPlayerSceneReady(){
+  setDisplayStage("Connected → Receiving scene… → Loading media…");
+  await mediaReadyPromise();
+  setDisplayStatus("✓ Player Display Ready",true,true);
+  setDisplayStage("Connected → Receiving scene… → Loading media… → Player Display Ready");
+  if(localChannel?.readyState==="open")localChannel.send(JSON.stringify({kind:"control",type:"PLAYER_SCENE_READY",sceneId:campaign.currentSceneId}));
 }
 function receiveLocalMessage(data){
   let m;try{m=JSON.parse(data)}catch{return}
@@ -1219,48 +1301,109 @@ function receiveLocalMessage(data){
     if(r.count===m.total){rxChunks.delete(m.id);receiveLocalMessage(r.parts.join(""))}
     return;
   }
+  if(m.kind==="control"){
+    if(localRole==="gm"&&m.type==="PLAYER_SCENE_READY"){
+      playerReady=true;setDisplayStatus("✓ Player Display Ready",true,true);setDisplayStage("Player acknowledged the current scene.");
+    }
+    if(localRole==="gm"&&m.type==="PLAYER_SYNC_FAILED"){
+      playerReady=false;setDisplayStatus("Player connected, scene not ready.",true,false);setDisplayStage("Scene sync failed. Use Resend Scene.");
+    }
+    return;
+  }
   if(localRole!=="player")return;
-  if(m.kind==="full"){
-    try{campaign=migrate(m.payload.campaign);selectedId=null;playerDisplayArmed=true;app.classList.add("player-display");app.classList.remove("tv-mode");rebuild();setDisplayStatus("Player Display synchronized.",true)}catch(err){setDisplayStatus("Could not load GM scene: "+err.message,false)}
+  if(m.kind==="initial-display-state"||m.kind==="full"){
+    try{
+      setDisplayStatus("Receiving scene…",true,false);setDisplayStage("Connected → Receiving scene…");
+      campaign=migrate(m.payload.campaign);selectedId=null;playerDisplayArmed=true;app.classList.add("player-display");app.classList.remove("tv-mode");rebuild();
+      $("displayDialog")?.close();
+      markPlayerSceneReady();
+    }catch(err){
+      setDisplayStatus("Connected, but scene sync failed.",true,false);setDisplayStage("Connected, but scene sync failed. Retry Scene Sync.");
+      if(localChannel?.readyState==="open")localChannel.send(JSON.stringify({kind:"control",type:"PLAYER_SYNC_FAILED",message:err.message}));
+    }
   }else if(m.kind==="state"){
-    const s=m.payload;
-    campaign.currentSceneId=s.currentSceneId;
-    s.scenes.forEach(inS=>{const dst=campaign.scenes.find(x=>x.id===inS.id);if(dst){dst.name=inS.name;dst.backgroundView=inS.backgroundView;dst.foregroundView=inS.foregroundView;dst.placements=inS.placements}});
-    s.characters.forEach(inC=>{const dst=campaign.characters.find(x=>x.id===inC.id);if(dst){dst.name=inC.name;dst.group=inC.group;dst.conditions=inC.conditions;dst.conditionsVisible=inC.conditionsVisible;dst.health=inC.health}});
+    const s=m.payload,dst=scene();
+    if(!dst||dst.id!==s.currentSceneId)return;
+    dst.name=s.scene.name;dst.backgroundView=s.scene.backgroundView;dst.foregroundView=s.scene.foregroundView;dst.placements=s.scene.placements;
+    const incomingIds=new Set(s.characters.map(c=>c.id));
+    campaign.characters=campaign.characters.filter(c=>incomingIds.has(c.id));
+    s.characters.forEach(inC=>{const c=campaign.characters.find(x=>x.id===inC.id);if(c){c.name=inC.name;c.group=inC.group;c.conditions=inC.conditions;c.conditionsVisible=inC.conditionsVisible;c.health=inC.health}});
     campaign.turnTracker=s.turnTracker;campaign.transition=s.transition;campaign.transitionDuration=s.transitionDuration??0.8;campaign.healthDisplayStyle=s.healthDisplayStyle||"bars";rebuild();
   }
 }
-async function makeOffer(){
-  localRole="gm";const pc=newPeer(),ch=pc.createDataChannel("scene-board",{ordered:true});bindChannel(ch);
-  const offer=await pc.createOffer();await pc.setLocalDescription(offer);await waitIce(pc);
-  $("localOfferCode").value=encodeSignal(pc.localDescription);setDisplayStatus("Offer ready. Copy it to the Player Display device.",false);
+async function handleSignalMessage(evt){
+  let m;try{m=JSON.parse(evt.data)}catch{return}
+  if(m.type==="connected"){
+    if(localRole==="gm"){$("gmPairStatus").textContent="Room ready. Waiting for Player…";setDisplayStatus("Waiting for Player…",false,false);setDisplayStage("Pairing code ready.")}
+    else{$("playerPairStatus").textContent="Joined room. Waiting for GM…";setDisplayStatus("Joined room. Waiting for GM…",false,false);setDisplayStage("Connected to pairing room.")}
+    return;
+  }
+  if(m.type==="peer-connected"&&localRole==="gm"){
+    $("gmPairStatus").textContent="Player found. Establishing direct connection…";
+    setDisplayStatus("Player found. Connecting…",false,false);setDisplayStage("Player joined → Establishing direct connection…");
+    const pc=newPeer(),ch=pc.createDataChannel("scene-board",{ordered:true});bindChannel(ch);
+    const offer=await pc.createOffer();await pc.setLocalDescription(offer);sendSignal({type:"offer",sdp:pc.localDescription});
+    return;
+  }
+  if(m.type==="offer"&&localRole==="player"){
+    $("playerPairStatus").textContent="GM found. Connecting…";
+    const pc=newPeer();pc.ondatachannel=e=>bindChannel(e.channel);
+    await pc.setRemoteDescription(m.sdp);await flushPendingIce();
+    const answer=await pc.createAnswer();await pc.setLocalDescription(answer);sendSignal({type:"answer",sdp:pc.localDescription});
+    return;
+  }
+  if(m.type==="answer"&&localRole==="gm"&&localPeer){await localPeer.setRemoteDescription(m.sdp);await flushPendingIce();return}
+  if(m.type==="ice"&&m.candidate){
+    if(localPeer?.remoteDescription){try{await localPeer.addIceCandidate(m.candidate)}catch{}}
+    else pendingIce.push(m.candidate);
+    return;
+  }
+  if(m.type==="peer-disconnected"){
+    playerReady=false;setDisplayStatus("Other device disconnected.",false,false);setDisplayStage("Connection lost.");
+    return;
+  }
 }
-async function makeAnswer(){
-  localRole="player";const pc=newPeer();pc.ondatachannel=e=>bindChannel(e.channel);
-  const offer=decodeSignal($("remoteOfferInput").value);await pc.setRemoteDescription(offer);
-  const answer=await pc.createAnswer();await pc.setLocalDescription(answer);await waitIce(pc);
-  $("playerAnswerCode").value=encodeSignal(pc.localDescription);playerDisplayArmed=true;setDisplayStatus("Answer ready. Copy it back to the GM device.",false);
+function openSignalSocket(role,code,token=""){
+  return new Promise((resolve,reject)=>{
+    if(signalingSocket)try{signalingSocket.close()}catch{}
+    localRole=role;currentPairCode=code;
+    const qs=new URLSearchParams({role});if(token)qs.set("token",token);
+    const ws=new WebSocket(`${PAIRING_WS}/rooms/${code}/socket?${qs}`);signalingSocket=ws;
+    ws.onopen=()=>resolve(ws);ws.onerror=()=>reject(Error("Could not reach the pairing service."));
+    ws.onmessage=e=>handleSignalMessage(e).catch(err=>{setDisplayStatus("Pairing error: "+err.message,false,false);setDisplayStage("Connection setup failed.")});
+    ws.onclose=()=>{if(signalingSocket===ws)signalingSocket=null};
+  });
 }
-async function acceptAnswer(){
-  if(!localPeer||localRole!=="gm")throw Error("Create a GM offer first.");
-  await localPeer.setRemoteDescription(decodeSignal($("localAnswerInput").value));
-  setDisplayStatus("Answer accepted. Waiting for local connection…",false);
+async function hostDisplay(){
+  disconnectLocal(false);setDisplayStatus("Creating pairing code…",false,false);setDisplayStage("Contacting pairing service…");
+  const r=await fetch(`${PAIRING_HTTP}/rooms`,{method:"POST"});if(!r.ok)throw Error("Could not create a pairing room.");
+  const data=await r.json();currentPairCode=data.code;hostToken=data.hostToken;
+  $("pairingCodeDisplay").textContent=currentPairCode;$("gmPairStatus").textContent="Opening room…";
+  await openSignalSocket("gm",currentPairCode,hostToken);
 }
-function disconnectLocal(){
-  try{localChannel?.close()}catch{}try{localPeer?.close()}catch{}
-  localChannel=null;localPeer=null;localRole=null;playerDisplayArmed=false;rxChunks.clear();app.classList.remove("player-display");setDisplayStatus("Not connected.",false);
+async function joinDisplay(){
+  disconnectLocal(false);const code=normalizePairCode($("joinPairingCode").value);$("joinPairingCode").value=code;
+  if(!/^[A-Z]{4}-\d{2}$/.test(code))throw Error("Enter a code like ABCD-12.");
+  $("playerPairStatus").textContent="Joining room…";setDisplayStatus("Joining Player Display…",false,false);setDisplayStage("Contacting pairing service…");
+  await openSignalSocket("player",code);
+}
+function disconnectLocal(resetUi=true){
+  try{localChannel?.close()}catch{}try{localPeer?.close()}catch{}try{signalingSocket?.close()}catch{}
+  localChannel=null;localPeer=null;signalingSocket=null;localRole=null;playerDisplayArmed=false;playerReady=false;pendingIce=[];rxChunks.clear();lastFullSignature="";currentPairCode="";hostToken="";
+  app.classList.remove("player-display");
+  if(resetUi){$("pairingCodeDisplay").textContent="----";$("gmPairStatus").textContent="Not hosting.";$("playerPairStatus").textContent="Not joined.";setDisplayStatus("Not connected.",false,false);setDisplayStage("")}
 }
 $("quickDisplay").onclick=()=>$("displayDialog").showModal();
 $("displayLinkPill").onclick=()=>$("displayDialog").showModal();
-$("makeLocalOffer").onclick=()=>makeOffer().catch(e=>setDisplayStatus("Could not create offer: "+e.message,false));
-$("joinLocalDisplay").onclick=()=>makeAnswer().catch(e=>setDisplayStatus("Could not create answer: "+e.message,false));
-$("acceptLocalAnswer").onclick=()=>acceptAnswer().catch(e=>setDisplayStatus("Could not accept answer: "+e.message,false));
-$("resyncLocalDisplay").onclick=()=>sendFullPlayerSync();
-$("disconnectLocalDisplay").onclick=disconnectLocal;
-$("enterPlayerDisplay").onclick=()=>{if(playerDisplayArmed){app.classList.add("player-display");$("displayDialog").close();}};
-$("playerDisplayExit").onclick=disconnectLocal;
+$("hostPlayerDisplay").onclick=()=>hostDisplay().catch(e=>{setDisplayStatus("Could not host: "+e.message,false,false);$("gmPairStatus").textContent=e.message});
+$("joinPlayerDisplay").onclick=()=>joinDisplay().catch(e=>{setDisplayStatus("Could not join: "+e.message,false,false);$("playerPairStatus").textContent=e.message});
+$("joinPairingCode").addEventListener("input",e=>{e.target.value=normalizePairCode(e.target.value)});
+$("copyPairingCode").onclick=async()=>{if(!currentPairCode)return;try{await navigator.clipboard.writeText(currentPairCode);$("gmPairStatus").textContent="Pairing code copied."}catch{$("gmPairStatus").textContent=`Code: ${currentPairCode}`}};
+$("resyncLocalDisplay").onclick=()=>{if(localRole==="gm")sendFullPlayerSync()};
+$("disconnectLocalDisplay").onclick=()=>disconnectLocal(true);
+$("playerDisplayExit").onclick=()=>disconnectLocal(true);
 
-// Broadcast visible state after existing render/apply pathways.
+// Broadcast player-visible state after existing render/apply pathways.
 const _v61Rebuild=rebuild;rebuild=function(){_v61Rebuild();sendPlayerState()};
 const _v61Apply=apply;apply=function(c){_v61Apply(c);sendPlayerState()};
 
@@ -1460,7 +1603,7 @@ $("clearDeveloperNotes")?.addEventListener("click",()=>{
   if(developerNoteSaved)developerNoteSaved.textContent="Notes cleared.";
 });
 
-if("serviceWorker"in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js?v=6.8.1").catch(()=>{}));rebuild();
+if("serviceWorker"in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js?v=6.9").catch(()=>{}));rebuild();
 })();
 </script>
 
