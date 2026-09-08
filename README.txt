@@ -1,4 +1,4 @@
-Scene Board V6.10
+Scene Board V6.10.1
 
 Adds per-character walkie-talkie props and a GM Investigation Board with read-only Player Notes.
 
@@ -15,3 +15,8 @@ What changed:
 - Player-safe initial sync sends only the current scene and currently visible characters; GM notes/background library are stripped.
 
 Recommended: keep GM and Player devices on the same local network.
+
+
+V6.10.1 update:
+- Walkie-talkie size range expanded to 10–120 px with finer 2 px +/- steps.
+- Walkie artwork replaced with a darker, more realistic late-70s/80s handheld radio style.
