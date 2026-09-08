@@ -1,7 +1,7 @@
 {
   "name": "Tabletop Scene Board",
   "short_name": "Scene Board",
-  "description": "Tabletop GM scene board with short-code Player Display pairing, configurable health display styles, GM tools, and TV presentation.",
+  "description": "Tabletop GM scene board with short-code Player Display pairing, configurable health display styles, GM tools, per-character walkie-talkies, Investigation Board, and TV presentation.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

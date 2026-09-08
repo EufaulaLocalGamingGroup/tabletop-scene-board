@@ -1,3 +1,7 @@
+Scene Board V6.10
+
+Adds per-character walkie-talkie props and a GM Investigation Board with read-only Player Notes.
+
 Scene Board v6.9.1 — Player Display Rework
 
 What changed:
